@@ -91,6 +91,30 @@
             border-top: 1px solid #eee;
             display: flex;
         }
+        
+        /* Animation des points de suspension pour l'indicateur de frappe */
+        .typing-indicator span {
+            opacity: 0;
+            animation: typingDots 1.4s infinite;
+        }
+        
+        .typing-indicator span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingDots {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
     </style>
     
     {% block styles %}{% endblock %}
@@ -221,7 +245,7 @@
     <!-- Chatbot Container -->
     <div class="chatbot-container" id="chatbot-container">
         <div class="chatbot-header">
-            <h5 class="mb-0">Assistant Zephir</h5>
+            <h5 class="mb-0">Assistant Zephir IA</h5>
             <button id="close-chatbot" style="background: none; border: none; color: white; font-size: 16px;">
                 <i class="fas fa-times"></i>
             </button>
@@ -249,30 +273,147 @@
     <!-- Chatbot Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Chatbot functionality
+            // Éléments du chatbot
             const chatbotToggle = document.getElementById('chatbot-toggle');
             const chatbotContainer = document.getElementById('chatbot-container');
             const closeChat = document.getElementById('close-chatbot');
             const chatMessages = document.getElementById('chat-messages');
             const chatInput = document.getElementById('chat-input');
             const sendMessage = document.getElementById('send-message');
+            let chatbotAvailable = false;
             
-            // Sample responses for a simple rules-based chatbot
-            const responses = {
-                "bonjour": "Bonjour! Comment puis-je vous aider aujourd'hui avec nos drones Zephir?",
-                "salut": "Bonjour! Comment puis-je vous aider avec nos drones?",
-                "hello": "Bonjour! Comment puis-je vous assister aujourd'hui?",
-                "drone": "Nous proposons plusieurs modèles de drones allant de 80€ à 140€. Quel type de drone recherchez-vous?",
-                "prix": "Nos drones sont disponibles entre 80€ et 140€ selon les modèles et les fonctionnalités.",
-                "livraison": "Nous livrons partout en France sous 2-3 jours ouvrés. La livraison est gratuite pour toute commande supérieure à 100€.",
-                "garantie": "Tous nos drones sont garantis 2 ans. Nous offrons également une extension de garantie à 3 ans en option.",
-                "batterie": "L'autonomie de nos drones varie entre 20 et 35 minutes selon les modèles.",
-                "paiement": "Nous acceptons les paiements par carte bancaire, PayPal et en 3 ou 4 fois sans frais.",
-                "camera": "Nos modèles Pro 720 sont équipés d'une caméra HD 720p, tandis que les Elite 4K disposent d'une caméra 4K avec stabilisation électronique.",
-                "merci": "Je vous en prie! N'hésitez pas si vous avez d'autres questions.",
-                "au revoir": "Au revoir! Merci d'avoir discuté avec moi. À bientôt!",
-                "support": "Pour le support technique, vous pouvez nous contacter au 01 23 45 67 89 ou via support@zephir-drones.fr"
-            };
+            // Vérifier la disponibilité du chatbot au chargement
+            checkChatbotStatus();
+            
+            function checkChatbotStatus() {
+                fetch('/chatbot/status')
+                    .then(response => response.json())
+                    .then(data => {
+                        chatbotAvailable = data.available;
+                        if (!chatbotAvailable) {
+                            console.log('Chatbot non disponible, utilisation du mode simulation');
+                        } else {
+                            console.log('Chatbot disponible avec le modèle', data.model);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la vérification du chatbot:', error);
+                        chatbotAvailable = false;
+                    });
+            }
+            
+            // Fonction pour envoyer un message au chatbot
+            function sendToChatbot(message) {
+                if (!chatbotAvailable) {
+                    // Utiliser le mode simulation (comportement existant)
+                    return simulateResponse(message);
+                }
+                
+                // Afficher un message de chargement
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'bot-message loading-message';
+                loadingDiv.innerHTML = `
+                    <div style="display: flex; margin-bottom: 15px;">
+                        <div style="background-color: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                            <i class="fas fa-robot" style="font-size: 14px;"></i>
+                        </div>
+                        <div style="background-color: #f1f1f1; padding: 10px; border-radius: 10px; max-width: 80%;">
+                            <span class="typing-indicator">Réflexion en cours<span>.</span><span>.</span><span>.</span></span>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(loadingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Envoyer la requête au serveur
+                fetch('/chatbot/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        question: message,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Supprimer le message de chargement
+                    chatMessages.removeChild(loadingDiv);
+                    
+                    if (data.success) {
+                        addBotMessage(data.answer);
+                    } else {
+                        addBotMessage("Désolé, j'ai rencontré un problème. Veuillez réessayer.");
+                    }
+                })
+                .catch(error => {
+                    // Supprimer le message de chargement
+                    chatMessages.removeChild(loadingDiv);
+                    console.error('Erreur:', error);
+                    addBotMessage("Désolé, une erreur est survenue lors de la communication avec le serveur.");
+                });
+            }
+            
+            // Mode simulation (code existant amélioré)
+            function simulateResponse(message) {
+                const responses = {
+                    "bonjour": "Bonjour! Comment puis-je vous aider aujourd'hui avec nos drones Zephir?",
+                    "salut": "Bonjour! Comment puis-je vous aider avec nos drones?",
+                    "hello": "Bonjour! Comment puis-je vous assister aujourd'hui?",
+                    "drone": "Nous proposons plusieurs modèles de drones allant de 80€ à 140€. Quel type de drone recherchez-vous?",
+                    "prix": "Nos drones sont disponibles entre 80€ et 140€ selon les modèles et les fonctionnalités.",
+                    "livraison": "Nous livrons partout en France sous 2-3 jours ouvrés. La livraison est gratuite pour toute commande supérieure à 100€.",
+                    "garantie": "Tous nos drones sont garantis 2 ans. Nous offrons également une extension de garantie à 3 ans en option.",
+                    "batterie": "L'autonomie de nos drones varie entre 20 et 35 minutes selon les modèles.",
+                    "paiement": "Nous acceptons les paiements par carte bancaire, PayPal et en 3 ou 4 fois sans frais.",
+                    "camera": "Nos modèles Pro 720 sont équipés d'une caméra HD 720p, tandis que les Elite 4K disposent d'une caméra 4K avec stabilisation électronique.",
+                    "merci": "Je vous en prie! N'hésitez pas si vous avez d'autres questions.",
+                    "au revoir": "Au revoir! Merci d'avoir discuté avec moi. À bientôt!",
+                    "support": "Pour le support technique, vous pouvez nous contacter au 01 23 45 67 89 ou via support@zephir-drones.fr"
+                };
+                
+                // Afficher un message de chargement
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'bot-message loading-message';
+                loadingDiv.innerHTML = `
+                    <div style="display: flex; margin-bottom: 15px;">
+                        <div style="background-color: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                            <i class="fas fa-robot" style="font-size: 14px;"></i>
+                        </div>
+                        <div style="background-color: #f1f1f1; padding: 10px; border-radius: 10px; max-width: 80%;">
+                            <span class="typing-indicator">Réflexion en cours<span>.</span><span>.</span><span>.</span></span>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(loadingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simuler un délai de réponse
+                setTimeout(() => {
+                    // Supprimer le message de chargement
+                    chatMessages.removeChild(loadingDiv);
+                    
+                    // Check for exact matches
+                    let response = responses[message.toLowerCase().trim()];
+                    
+                    // Check for partial matches if no exact match
+                    if (!response) {
+                        for (const key in responses) {
+                            if (message.toLowerCase().includes(key)) {
+                                response = responses[key];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Default response
+                    if (!response) {
+                        response = "Je suis désolé, je n'ai pas compris votre question. Vous pouvez me demander des informations sur nos drones, les prix, la livraison, la garantie ou le paiement.";
+                    }
+                    
+                    addBotMessage(response);
+                }, 1000); // Délai d'une seconde pour simuler la réflexion
+            }
             
             function addBotMessage(message) {
                 const botDiv = document.createElement('div');
@@ -308,24 +449,20 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
             
-            // Function to get chatbot response
-            function getBotResponse(message) {
-                message = message.toLowerCase().trim();
-                
-                // Check for exact matches
-                if (responses[message]) {
-                    return responses[message];
-                }
-                
-                // Check for partial matches
-                for (const key in responses) {
-                    if (message.includes(key)) {
-                        return responses[key];
-                    }
-                }
-                
-                // Default response
-                return "Je suis désolé, je n'ai pas compris votre question. Vous pouvez me demander des informations sur nos drones, les prix, la livraison, la garantie ou le paiement.";
+            // Réinitialiser la conversation
+            function resetChat() {
+                fetch('/chatbot/reset', {
+                    method: 'POST',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Conversation réinitialisée');
+                    chatMessages.innerHTML = '';
+                    addBotMessage("Bonjour! Je suis l'assistant Zephir. Comment puis-je vous aider aujourd'hui?");
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la réinitialisation:', error);
+                });
             }
             
             // Event listeners
@@ -333,7 +470,7 @@
                 chatbotContainer.style.display = 'block';
                 chatbotToggle.style.display = 'none';
                 
-                // Add welcome message if it's the first time
+                // Ajouter le message de bienvenue si c'est la première ouverture
                 if (chatMessages.children.length === 0) {
                     addBotMessage("Bonjour! Je suis l'assistant Zephir. Comment puis-je vous aider aujourd'hui?");
                 }
@@ -348,13 +485,7 @@
                 const message = chatInput.value.trim();
                 if (message) {
                     addUserMessage(message);
-                    
-                    // Simulate typing delay
-                    setTimeout(function() {
-                        const botResponse = getBotResponse(message);
-                        addBotMessage(botResponse);
-                    }, 600);
-                    
+                    sendToChatbot(message);
                     chatInput.value = '';
                 }
             });

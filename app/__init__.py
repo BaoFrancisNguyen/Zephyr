@@ -42,6 +42,7 @@ def create_app(config_class=Config):
     from app.routes.tickets import tickets_bp
     from app.routes.admin import admin_bp
     from app.routes.main import main_bp
+    from app.routes.chatbot import chatbot_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(offers_bp)
@@ -50,6 +51,7 @@ def create_app(config_class=Config):
     app.register_blueprint(tickets_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(main_bp)
+    app.register_blueprint(chatbot_bp)
 
     # Initialisation de Flask-Admin
     with app.app_context():
