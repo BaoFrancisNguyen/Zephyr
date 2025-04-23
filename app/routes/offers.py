@@ -27,32 +27,24 @@ def detail(offer_id):
     """
     Affiche les détails d'un drone spécifique.
     """
-    drone = Offer.query.get_or_404(offer_id)
+    offer = Offer.query.get_or_404(offer_id)
     
     # Vérifier si le drone est publié
-    if not drone.est_publie:
+    if not offer.est_publie:
         flash('Ce drone n\'est pas disponible.', 'warning')
         return redirect(url_for('offers.index'))
     
-    # Préparer les caractéristiques pour l'affichage
-    drone.features = []
-    if drone.autonomie:
-        drone.features.append(f"Autonomie: {drone.autonomie} minutes")
-    if drone.poids:
-        drone.features.append(f"Poids: {drone.poids} g")
-    if drone.portee:
-        drone.features.append(f"Portée: {drone.portee} m")
-    if drone.vitesse:
-        drone.features.append(f"Vitesse max: {drone.vitesse} km/h")
+    # Préparer les caractéristiques pour l'affichage (si nécessaire)
+    # Cette partie peut rester si vous en avez besoin pour d'autres choses
     
     # Récupérer des drones similaires (même niveau ou type)
-    similar_drones = Offer.query.filter(
-        Offer.id != drone.id,
+    similar_offers = Offer.query.filter(
+        Offer.id != offer.id,
         Offer.est_publie == True,
-        (Offer.niveau == drone.niveau) | (Offer.type == drone.type)
+        (Offer.niveau == offer.niveau) | (Offer.type == offer.type)
     ).limit(4).all()
     
-    return render_template('offers/detail.html', drone=drone, similar_drones=similar_drones)
+    return render_template('offers/detail.html', offer=offer, similar_offers=similar_offers)
 
 @offers_bp.route('/add-to-cart/<int:offer_id>', methods=['POST'])
 @login_required
