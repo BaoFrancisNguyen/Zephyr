@@ -1,6 +1,7 @@
+```html
 {% extends "base.html" %}
 
-{% block title %}JO E-Tickets - Confirmation de paiement{% endblock %}
+{% block title %}Zephir Drones - Confirmation de paiement{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -21,15 +22,15 @@
                 
                 <hr class="my-4">
                 
-                <p>Vos billets électroniques ont été générés et sont disponibles dans la section "Mes billets".</p>
+                <p>Votre drone sera préparé et expédié sous 24 à 48 heures ouvrées.</p>
                 <p class="text-muted small">Un email de confirmation a également été envoyé à {{ order.adresse_email }}</p>
                 
                 <div class="d-grid gap-2 col-md-8 mx-auto mt-4">
-                    <a href="{{ url_for('tickets.index') }}" class="btn btn-primary">
-                        <i class="fas fa-ticket-alt me-2"></i>Voir mes billets
-                    </a>
-                    <a href="{{ url_for('orders.detail', order_id=order.id) }}" class="btn btn-outline-primary">
+                    <a href="{{ url_for('orders.detail', order_id=order.id) }}" class="btn btn-primary">
                         <i class="fas fa-info-circle me-2"></i>Détails de la commande
+                    </a>
+                    <a href="{{ url_for('orders.track', order_id=order.id) }}" class="btn btn-outline-primary">
+                        <i class="fas fa-truck me-2"></i>Suivre ma commande
                     </a>
                     <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
                         <i class="fas fa-home me-2"></i>Retour à l'accueil
@@ -40,3 +41,4 @@
     </div>
 </div>
 {% endblock %}
+```
