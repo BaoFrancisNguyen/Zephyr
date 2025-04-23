@@ -4,9 +4,10 @@ from wtforms import StringField, TextAreaField, SelectField, FloatField, Integer
 from wtforms.validators import DataRequired, Length, NumberRange, ValidationError, Email
 from datetime import datetime
 
+# admin_forms.py (extrait)
 class OfferForm(FlaskForm):
     """
-    Formulaire de création/modification d'une offre.
+    Formulaire de création/modification d'un drone.
     """
     titre = StringField('Titre', validators=[
         DataRequired(),
@@ -19,26 +20,17 @@ class OfferForm(FlaskForm):
     ])
     
     type = SelectField('Type', choices=[
-        ('solo', 'Solo (1 personne)'),
-        ('duo', 'Duo (2 personnes)'),
-        ('familiale', 'Familiale (4 personnes)')
+        ('debutant', 'Débutant'),
+        ('intermediaire', 'Intermédiaire'),
+        ('expert', 'Expert')
     ], validators=[DataRequired()])
-    
-    nombre_personnes = IntegerField('Nombre de personnes', validators=[
-        DataRequired(),
-        NumberRange(min=1, max=4)
-    ])
     
     prix = FloatField('Prix (€)', validators=[
         DataRequired(),
         NumberRange(min=0)
     ])
     
-    date_evenement = DateTimeField('Date de l\'événement', format='%Y-%m-%dT%H:%M', validators=[
-        DataRequired()
-    ])
-    
-    disponibilite = IntegerField('Disponibilité', validators=[
+    stock = IntegerField('Stock disponible', validators=[
         DataRequired(),
         NumberRange(min=0)
     ])
@@ -47,25 +39,21 @@ class OfferForm(FlaskForm):
         FileAllowed(['jpg', 'png', 'jpeg'], 'Images uniquement')
     ])
     
-    est_publie = BooleanField('Publier l\'offre')
+    autonomie = IntegerField('Autonomie (minutes)', validators=[NumberRange(min=0)])
+    poids = IntegerField('Poids (grammes)', validators=[NumberRange(min=0)])
+    dimensions = StringField('Dimensions')
+    camera = StringField('Caméra')
+    portee = IntegerField('Portée (mètres)', validators=[NumberRange(min=0)])
+    vitesse = IntegerField('Vitesse max (km/h)', validators=[NumberRange(min=0)])
+    niveau = SelectField('Niveau', choices=[
+        ('debutant', 'Débutant'),
+        ('intermediaire', 'Intermédiaire'),
+        ('expert', 'Expert')
+    ])
+    
+    est_publie = BooleanField('Publier le drone')
     
     submit = SubmitField('Enregistrer')
-    
-    def validate_date_evenement(self, date_evenement):
-        """Vérifie que la date de l'événement est dans le futur."""
-        if date_evenement.data < datetime.utcnow():
-            raise ValidationError('La date de l\'événement doit être dans le futur.')
-    
-    def validate_nombre_personnes(self, nombre_personnes):
-        """Vérifie que le nombre de personnes correspond au type d'offre sélectionné."""
-        type_to_persons = {
-            'solo': 1,
-            'duo': 2,
-            'familiale': 4
-        }
-        
-        if nombre_personnes.data != type_to_persons.get(self.type.data):
-            raise ValidationError(f'Le nombre de personnes pour une offre {self.type.data} doit être {type_to_persons.get(self.type.data)}.')
 
 class UserForm(FlaskForm):
     """

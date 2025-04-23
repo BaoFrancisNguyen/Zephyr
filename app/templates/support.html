@@ -1,0 +1,551 @@
+{% extends "base.html" %}
+
+{% block title %}Zephir Drones - Support et FAQ{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-3">Support technique</h1>
+            <p class="lead">Notre équipe est à votre disposition pour vous aider avec votre drone</p>
+        </div>
+    </div>
+
+    <!-- Options de support -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 support-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-tools fa-4x text-primary mb-3"></i>
+                    <h3>Service de réparation</h3>
+                    <p>Un service après-vente réactif pour vous assister en cas de problème avec votre drone.</p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check-circle text-success me-2"></i>Diagnostic gratuit</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i>Techniciens certifiés</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i>Pièces d'origine</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i>Garantie sur les réparations</li>
+                    </ul>
+                    <div class="mt-4">
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-wrench me-2"></i>Demander une réparation
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 support-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-headset fa-4x text-primary mb-3"></i>
+                    <h3>Assistance téléphonique</h3>
+                    <p>Contactez directement notre équipe de support technique par téléphone.</p>
+                    <div class="contact-info mt-4">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <i class="fas fa-phone-alt fa-2x text-primary me-3"></i>
+                            <div class="text-start">
+                                <h5 class="mb-0">01 23 45 67 89</h5>
+                                <small class="text-muted">Du lundi au samedi de 9h à 18h</small>
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>Préparez votre numéro de série lors de votre appel
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="tel:0123456789" class="btn btn-primary">
+                            <i class="fas fa-phone-alt me-2"></i>Appeler maintenant
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 support-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-envelope fa-4x text-primary mb-3"></i>
+                    <h3>Support par email</h3>
+                    <p>Envoyez-nous un message détaillé et notre équipe vous répondra dans les 24h.</p>
+                    <div class="contact-info mt-4">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <i class="fas fa-envelope fa-2x text-primary me-3"></i>
+                            <div class="text-start">
+                                <h5 class="mb-0">support@zephir-drones.fr</h5>
+                                <small class="text-muted">Réponse sous 24h ouvrables</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="mailto:support@zephir-drones.fr" class="btn btn-primary">
+                            <i class="fas fa-envelope me-2"></i>Envoyer un email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Système de tickets -->
+    <div class="card mb-5">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Créer un ticket de support</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <h4>Soumettez votre demande</h4>
+                    <p>Notre système de tickets vous permet de suivre l'avancement de votre demande et d'échanger facilement avec notre équipe technique.</p>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>Délai de réponse moyen: moins de 12 heures
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <form>
+                        <div class="mb-3">
+                            <label for="ticket-subject" class="form-label">Sujet</label>
+                            <input type="text" class="form-control" id="ticket-subject" placeholder="Ex: Problème de connectivité drone-télécommande">
+                        </div>
+                        <div class="mb-3">
+                            <label for="ticket-type" class="form-label">Type de problème</label>
+                            <select class="form-select" id="ticket-type">
+                                <option value="">Sélectionnez un type</option>
+                                <option value="technique">Problème technique</option>
+                                <option value="accessoires">Accessoires et pièces détachées</option>
+                                <option value="logiciel">Application et logiciel</option>
+                                <option value="garantie">Garantie et retours</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ticket-description" class="form-label">Description</label>
+                            <textarea class="form-control" id="ticket-description" rows="4" placeholder="Décrivez votre problème en détail..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ticket-attachment" class="form-label">Pièce jointe (optionnel)</label>
+                            <input class="form-control" type="file" id="ticket-attachment">
+                            <div class="form-text">Vous pouvez joindre des photos ou vidéos pour illustrer votre problème.</div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Soumettre le ticket
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card mb-5">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Questions fréquemment posées</h3>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="faqAccordion">
+                <!-- Section 1: Problèmes de batterie -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingBattery">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBattery" aria-expanded="false" aria-controls="collapseBattery">
+                            <i class="fas fa-battery-half me-2"></i>Problèmes de batterie
+                        </button>
+                    </h2>
+                    <div id="collapseBattery" class="accordion-collapse collapse" aria-labelledby="headingBattery" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <div class="mb-4">
+                                <h5>Ma batterie ne tient pas la charge indiquée</h5>
+                                <p>L'autonomie de la batterie peut varier en fonction de plusieurs facteurs:</p>
+                                <ul>
+                                    <li>Conditions météorologiques (le vent et le froid réduisent l'autonomie)</li>
+                                    <li>Type d'utilisation (les manœuvres complexes consomment plus d'énergie)</li>
+                                    <li>Âge de la batterie (la capacité diminue naturellement avec le temps)</li>
+                                </ul>
+                                <p>Pour optimiser l'autonomie, volez par temps calme, évitez les manœuvres brusques et stockez la batterie à environ 50% de charge si vous ne l'utilisez pas pendant une période prolongée.</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Comment prolonger la durée de vie de ma batterie?</h5>
+                                <ul>
+                                    <li>Ne déchargez pas complètement la batterie</li>
+                                    <li>Stockez la batterie entre 10°C et 25°C</li>
+                                    <li>Évitez de charger la batterie immédiatement après utilisation (laissez-la refroidir)</li>
+                                    <li>Utilisez uniquement le chargeur officiel Zephir</li>
+                                    <li>Si vous n'utilisez pas votre drone pendant une longue période, maintenez la batterie à environ 50% de charge</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h5>Mon drone s'éteint brusquement en vol</h5>
+                                <p>Si votre drone s'éteint en plein vol, cela peut être dû à:</p>
+                                <ul>
+                                    <li>Une batterie défectueuse (contactez notre service technique)</li>
+                                    <li>Un court-circuit dans le système électrique</li>
+                                    <li>Une connexion incorrecte de la batterie</li>
+                                </ul>
+                                <p>Nous vous recommandons de vérifier les connecteurs de la batterie et de contacter notre service technique si le problème persiste.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 2: Problèmes de vol -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFlight">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFlight" aria-expanded="false" aria-controls="collapseFlight">
+                            <i class="fas fa-plane me-2"></i>Problèmes de vol et de stabilité
+                        </button>
+                    </h2>
+                    <div id="collapseFlight" class="accordion-collapse collapse" aria-labelledby="headingFlight" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <div class="mb-4">
+                                <h5>Mon drone dérive dans une direction</h5>
+                                <p>Si votre drone dérive constamment dans une direction, il est probablement nécessaire de calibrer les gyroscopes:</p>
+                                <ol>
+                                    <li>Placez le drone sur une surface plane et horizontale</li>
+                                    <li>Allumez le drone et la télécommande</li>
+                                    <li>Dans l'application, accédez au menu "Paramètres" puis "Calibration des capteurs"</li>
+                                    <li>Suivez les instructions à l'écran pour calibrer les gyroscopes</li>
+                                </ol>
+                                <p>Si le problème persiste après calibration, vérifiez si des hélices sont endommagées ou mal fixées.</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Mon drone vibre anormalement en vol</h5>
+                                <p>Les vibrations excessives peuvent être causées par:</p>
+                                <ul>
+                                    <li>Des hélices endommagées ou déformées</li>
+                                    <li>Des moteurs défectueux</li>
+                                    <li>Des vis desserrées sur le châssis</li>
+                                </ul>
+                                <p>Inspectez visuellement les hélices et remplacez-les si nécessaire. Vérifiez également que toutes les vis sont bien serrées.</p>
+                            </div>
+                            
+                            <div>
+                                <h5>Mon drone ne maintient pas l'altitude</h5>
+                                <p>Si votre drone monte ou descend sans commande de votre part:</p>
+                                <ul>
+                                    <li>Calibrez le baromètre dans l'application</li>
+                                    <li>Vérifiez que les capteurs situés sous le drone sont propres</li>
+                                    <li>Volez dans des conditions météorologiques stables (évitez les rafales de vent)</li>
+                                </ul>
+                                <p>Les variations de pression atmosphérique (comme lors d'un changement météorologique rapide) peuvent également affecter la stabilité de l'altitude.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 3: Problèmes de caméra -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingCamera">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCamera" aria-expanded="false" aria-controls="collapseCamera">
+                            <i class="fas fa-camera me-2"></i>Problèmes de caméra et d'image
+                        </button>
+                    </h2>
+                    <div id="collapseCamera" class="accordion-collapse collapse" aria-labelledby="headingCamera" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <div class="mb-4">
+                                <h5>Mes photos/vidéos sont floues</h5>
+                                <p>Pour obtenir des images nettes:</p>
+                                <ul>
+                                    <li>Vérifiez que l'objectif de la caméra est propre</li>
+                                    <li>Assurez-vous que le film protecteur de l'objectif a été retiré</li>
+                                    <li>Évitez de filmer en mouvement rapide</li>
+                                    <li>Utilisez le mode Stabilisation si disponible sur votre modèle</li>
+                                </ul>
+                                <p>Si les images restent floues, le système de stabilisation peut être défectueux.</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Je ne peux pas transférer mes vidéos sur mon smartphone</h5>
+                                <p>Si vous rencontrez des problèmes pour transférer vos vidéos:</p>
+                                <ul>
+                                    <li>Vérifiez que votre application Zephir est à jour</li>
+                                    <li>Assurez-vous que le drone et le smartphone sont bien connectés au même réseau Wi-Fi</li>
+                                    <li>Redémarrez l'application et le drone</li>
+                                    <li>Vérifiez l'espace disponible sur votre smartphone</li>
+                                </ul>
+                                <p>Pour les fichiers volumineux, nous recommandons d'utiliser la carte SD directement.</p>
+                            </div>
+                            
+                            <div>
+                                <h5>La couleur de mes vidéos est délavée ou incorrecte</h5>
+                                <p>Les problèmes de couleur peuvent être liés à:</p>
+                                <ul>
+                                    <li>Des réglages de balance des blancs incorrects</li>
+                                    <li>Des conditions d'éclairage difficiles</li>
+                                    <li>Des filtres automatiques appliqués par l'application</li>
+                                </ul>
+                                <p>Consultez notre tutoriel "Paramètres avancés de la caméra" pour apprendre à ajuster manuellement les couleurs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 4: Problèmes de connectivité -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingConnectivity">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseConnectivity" aria-expanded="false" aria-controls="collapseConnectivity">
+                            <i class="fas fa-wifi me-2"></i>Problèmes de connectivité
+                        </button>
+                    </h2>
+                    <div id="collapseConnectivity" class="accordion-collapse collapse" aria-labelledby="headingConnectivity" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <div class="mb-4">
+                                <h5>Mon drone ne se connecte pas à la télécommande</h5>
+                                <p>Pour résoudre les problèmes de connexion entre le drone et la télécommande:</p>
+                                <ol>
+                                    <li>Éteignez puis rallumez le drone et la télécommande</li>
+                                    <li>Assurez-vous que les batteries sont suffisamment chargées</li>
+                                    <li>Réinitialisez la connexion en maintenant le bouton d'appairage de la télécommande pendant 5 secondes</li>
+                                    <li>Vérifiez qu'il n'y a pas d'interférences électromagnétiques à proximité</li>
+                                </ol>
+                                <p>Si le problème persiste, essayez de mettre à jour le firmware du drone et de la télécommande.</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>L'application ne reconnaît pas mon drone</h5>
+                                <p>Si l'application ne détecte pas votre drone:</p>
+                                <ul>
+                                    <li>Vérifiez que le Bluetooth et le Wi-Fi de votre smartphone sont activés</li>
+                                    <li>Assurez-vous que le drone est allumé et que son voyant de statut est allumé</li>
+                                    <li>Rapprochez votre smartphone du drone</li>
+                                    <li>Redémarrez l'application et le drone</li>
+                                    <li>Vérifiez que votre version de l'application est compatible avec votre modèle de drone</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h5>Je perds la connexion pendant le vol</h5>
+                                <p>Les déconnexions pendant le vol peuvent être causées par:</p>
+                                <ul>
+                                    <li>Une distance trop importante (respectez la portée maximale indiquée pour votre modèle)</li>
+                                    <li>Des obstacles entre la télécommande et le drone</li>
+                                    <li>Des interférences radio dans la zone de vol</li>
+                                    <li>Une batterie faible sur la télécommande</li>
+                                </ul>
+                                <p>Nos drones sont équipés d'une fonction "Retour automatique" qui s'active en cas de perte de signal prolongée.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 5: Garantie et retours -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingWarranty">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWarranty" aria-expanded="false" aria-controls="collapseWarranty">
+                            <i class="fas fa-shield-alt me-2"></i>Garantie et retours
+                        </button>
+                    </h2>
+                    <div id="collapseWarranty" class="accordion-collapse collapse" aria-labelledby="headingWarranty" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <div class="mb-4">
+                                <h5>Quelle est la durée de garantie de mon drone?</h5>
+                                <p>Tous nos drones Zephir bénéficient d'une garantie de 2 ans à compter de la date d'achat. Les accessoires et batteries sont garantis 6 mois.</p>
+                                <p>Cette garantie couvre tous les défauts de fabrication et de matériaux, mais elle ne s'applique pas aux dommages causés par:</p>
+                                <ul>
+                                    <li>Un accident ou une chute</li>
+                                    <li>Une utilisation incorrecte ou non conforme au manuel</li>
+                                    <li>L'eau ou l'humidité excessive</li>
+                                    <li>Des modifications non autorisées</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Comment faire une demande de garantie?</h5>
+                                <p>Pour faire une demande de prise en charge sous garantie:</p>
+                                <ol>
+                                    <li>Contactez notre service client par téléphone ou email</li>
+                                    <li>Fournissez votre preuve d'achat et le numéro de série du drone</li>
+                                    <li>Décrivez précisément le problème rencontré</li>
+                                    <li>Suivez les instructions qui vous seront communiquées pour l'envoi du produit</li>
+                                </ol>
+                                <p>Le traitement d'une demande de garantie prend généralement entre 5 et 10 jours ouvrés à compter de la réception du produit.</p>
+                            </div>
+                            
+                            <div>
+                                <h5>Puis-je étendre ma garantie?</h5>
+                                <p>Oui, nous proposons une extension de garantie "Zephir Care" qui prolonge la couverture de votre drone de 1 an supplémentaire et inclut:</p>
+                                <ul>
+                                    <li>Une couverture étendue comprenant un incident de chute</li>
+                                    <li>Un remplacement prioritaire</li>
+                                    <li>Un service de prêt pendant la durée de réparation</li>
+                                </ul>
+                                <p>Cette extension peut être souscrite dans les 30 jours suivant l'achat de votre drone. Contactez notre service commercial pour plus d'informations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tutoriels et ressources -->
+    <div class="card mb-5">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Ressources utiles</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 resource-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-book fa-2x text-primary me-3"></i>
+                                <h4 class="mb-0">Manuels d'utilisation</h4>
+                            </div>
+                            <p>Téléchargez les manuels d'utilisation complets de tous nos modèles de drones.</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Zephir X100
+                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-download me-1"></i>PDF
+                                    </a>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Zephir Pro 720
+                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-download me-1"></i>PDF
+                                    </a>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Zephir Elite 4K
+                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-download me-1"></i>PDF
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 resource-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-tools fa-2x text-primary me-3"></i>
+                                <h4 class="mb-0">Pièces détachées</h4>
+                            </div>
+                            <p>Trouvez toutes les pièces détachées compatibles avec votre modèle de drone.</p>
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="drone-model-select">
+                                    <option selected>Sélectionnez votre modèle</option>
+                                    <option value="x100">Zephir X100</option>
+                                    <option value="pro720">Zephir Pro 720</option>
+                                    <option value="elite4k">Zephir Elite 4K</option>
+                                </select>
+                                <button class="btn btn-primary" type="button">Rechercher</button>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="{{ url_for('offers.index') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-shopping-cart me-2"></i>Voir tous les accessoires
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 resource-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-download fa-2x text-primary me-3"></i>
+                                <h4 class="mb-0">Mises à jour logicielles</h4>
+                            </div>
+                            <p>Téléchargez les dernières mises à jour du firmware pour votre drone et l'application mobile.</p>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>Dernière mise à jour: 15 mars 2025 (v3.2.1)
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a href="#" class="btn btn-outline-primary">
+                                    <i class="fab fa-android me-2"></i>Android
+                                </a>
+                                <a href="#" class="btn btn-outline-primary">
+                                    <i class="fab fa-apple me-2"></i>iOS
+                                </a>
+                                <a href="#" class="btn btn-outline-primary">
+                                    <i class="fas fa-microchip me-2"></i>Firmware drone
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 resource-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-video fa-2x text-primary me-3"></i>
+                                <h4 class="mb-0">Tutoriels vidéo</h4>
+                            </div>
+                            <p>Accédez à notre bibliothèque complète de tutoriels vidéo pour tous les niveaux.</p>
+                            <div class="list-group">
+                                <a href="{{ url_for('main.tutorials') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Tutoriels pour débutants
+                                    <span class="badge bg-primary rounded-pill">5 vidéos</span>
+                                </a>
+                                <a href="{{ url_for('main.tutorials') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Tutoriels intermédiaires
+                                    <span class="badge bg-primary rounded-pill">8 vidéos</span>
+                                </a>
+                                <a href="{{ url_for('main.tutorials') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Tutoriels experts
+                                    <span class="badge bg-primary rounded-pill">6 vidéos</span>
+                                </a>
+                                <a href="{{ url_for('main.tutorials') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Maintenance et entretien
+                                    <span class="badge bg-primary rounded-pill">4 vidéos</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="card mb-5 bg-primary text-white">
+        <div class="card-body text-center py-5">
+            <h3 class="mb-3">Vous n'avez pas trouvé de réponse à votre question ?</h3>
+            <p class="lead mb-4">Notre équipe de support technique est disponible pour vous aider avec votre drone Zephir</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="tel:0123456789" class="btn btn-light btn-lg">
+                    <i class="fas fa-phone-alt me-2"></i>Nous appeler
+                </a>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Nous écrire
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation des cartes
+        const cards = document.querySelectorAll('.support-card, .resource-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
+
+<style>
+    .support-card, .resource-card {
+        transition: all 0.3s ease;
+        opacity: 0.8;
+        transform: translateY(10px);
+    }
+    
+    .support-card:hover, .resource-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>
+{% endblock %}

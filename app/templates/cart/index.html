@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}JO E-Tickets - Panier{% endblock %}
+{% block title %}Zephir Drones - Votre panier{% endblock %}
 
 {% block content %}
 <h1 class="mb-4">Votre panier</h1>
@@ -18,7 +18,7 @@
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Offre</th>
+                                <th>Produit</th>
                                 <th>Prix unitaire</th>
                                 <th>Quantité</th>
                                 <th>Sous-total</th>
@@ -31,13 +31,13 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         {% if item.offer.image %}
-                                        <img src="{{ url_for('static', filename='uploads/' + item.offer.image) }}" class="img-thumbnail me-3" style="width: 50px;" alt="{{ item.offer.titre }}">
+                                        <img src="{{ url_for('static', filename='images/' + item.offer.image) }}" class="img-thumbnail me-3" style="width: 50px;" alt="{{ item.offer.titre }}">
                                         {% else %}
-                                        <img src="{{ url_for('static', filename='images/default-offer.jpg') }}" class="img-thumbnail me-3" style="width: 50px;" alt="{{ item.offer.titre }}">
+                                        <img src="{{ url_for('static', filename='images/default-drone.jpg') }}" class="img-thumbnail me-3" style="width: 50px;" alt="{{ item.offer.titre }}">
                                         {% endif %}
                                         <div>
                                             <h6 class="mb-0">{{ item.offer.titre }}</h6>
-                                            <small class="text-muted">{{ item.offer.type|capitalize }} - {{ item.offer.nombre_personnes }} personne(s)</small>
+                                            <small class="text-muted">{{ item.offer.type|capitalize }}</small>
                                         </div>
                                     </div>
                                 </td>
@@ -48,7 +48,7 @@
                                             <button type="button" class="btn btn-outline-secondary btn-decrement">
                                                 <i class="fas fa-minus"></i>
                                             </button>
-                                            <input type="number" name="quantity" class="form-control text-center quantity-input" value="{{ item.quantite }}" min="1" max="{{ item.offer.disponibilite }}">
+                                            <input type="number" name="quantity" class="form-control text-center quantity-input" value="{{ item.quantite }}" min="1" max="{{ item.offer.stock }}">
                                             <button type="button" class="btn btn-outline-secondary btn-increment">
                                                 <i class="fas fa-plus"></i>
                                             </button>
@@ -71,7 +71,7 @@
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <a href="{{ url_for('offers.index') }}" class="btn btn-outline-primary">
-                    <i class="fas fa-arrow-left me-2"></i>Continuer les achats
+                    <i class="fas fa-arrow-left me-2"></i>Continuer mes achats
                 </a>
                 <form method="POST" action="{{ url_for('cart.clear') }}">
                     <button type="submit" class="btn btn-outline-danger">
@@ -97,10 +97,33 @@
                     <span>TVA (20%) :</span>
                     <span>{{ (cart.total() * 0.2)|round(2) }} €</span>
                 </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Livraison :</span>
+                    {% if cart.total() >= 100 %}
+                    <span class="text-success">Gratuite</span>
+                    {% else %}
+                    <span>5,99 €</span>
+                    {% endif %}
+                </div>
                 <hr>
                 <div class="d-flex justify-content-between mb-4">
                     <span class="fw-bold">Total :</span>
-                    <span class="fw-bold text-primary fs-5">{{ cart.total() }} €</span>
+                    <span class="fw-bold text-primary fs-5">
+                        {% if cart.total() >= 100 %}
+                        {{ cart.total() }} €
+                        {% else %}
+                        {{ cart.total() + 5.99 }} €
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <!-- Code promo -->
+                <div class="mb-3">
+                    <label for="promo-code" class="form-label">Code promo</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="promo-code" placeholder="Entrez votre code">
+                        <button class="btn btn-outline-primary" type="button">Appliquer</button>
+                    </div>
                 </div>
                 
                 <form method="POST" action="{{ url_for('orders.create') }}">
@@ -116,6 +139,50 @@
                         <i class="fas fa-info-circle me-2"></i>En procédant au paiement, vous acceptez nos <a href="{{ url_for('main.terms') }}">conditions d'utilisation</a>.
                     </div>
                 </div>
+                
+                <!-- Méthodes de paiement -->
+                <div class="text-center mt-3">
+                    <p class="small text-muted mb-2">Nous acceptons</p>
+                    <img src="{{ url_for('static', filename='images/payment-methods.png') }}" alt="Méthodes de paiement acceptées" class="img-fluid" style="max-height: 30px;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vous pourriez aussi aimer -->
+        <div class="card mt-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Vous pourriez aussi aimer</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('offers.detail', offer_id=1) }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ url_for('static', filename='images/accessory1.jpg') }}" class="img-thumbnail me-3" style="width: 50px;" alt="Batterie supplémentaire">
+                            <div>
+                                <h6 class="mb-0">Batterie supplémentaire</h6>
+                                <small class="text-primary">29,99 €</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('offers.detail', offer_id=2) }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ url_for('static', filename='images/accessory2.jpg') }}" class="img-thumbnail me-3" style="width: 50px;" alt="Hélices de rechange">
+                            <div>
+                                <h6 class="mb-0">Hélices de rechange</h6>
+                                <small class="text-primary">14,99 €</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('offers.detail', offer_id=3) }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ url_for('static', filename='images/accessory3.jpg') }}" class="img-thumbnail me-3" style="width: 50px;" alt="Sac de transport">
+                            <div>
+                                <h6 class="mb-0">Sac de transport</h6>
+                                <small class="text-primary">24,99 €</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -125,11 +192,52 @@
     <div class="card-body text-center py-5">
         <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
         <h4>Votre panier est vide</h4>
-        <p class="text-muted">Parcourez nos offres pour ajouter des billets à votre panier.</p>
+        <p class="text-muted">Parcourez notre catalogue pour ajouter des drones à votre panier.</p>
         <a href="{{ url_for('offers.index') }}" class="btn btn-primary mt-3">
-            <i class="fas fa-ticket-alt me-2"></i>Voir les offres
+            <i class="fas fa-drone me-2"></i>Voir nos drones
         </a>
     </div>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion des quantités
+        const decrementBtns = document.querySelectorAll('.btn-decrement');
+        const incrementBtns = document.querySelectorAll('.btn-increment');
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        
+        decrementBtns.forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                const input = quantityInputs[index];
+                if (parseInt(input.value) > parseInt(input.min)) {
+                    input.value = parseInt(input.value) - 1;
+                    // Soumettre automatiquement le formulaire pour mettre à jour
+                    this.closest('form').submit();
+                }
+            });
+        });
+        
+        incrementBtns.forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                const input = quantityInputs[index];
+                if (parseInt(input.value) < parseInt(input.max)) {
+                    input.value = parseInt(input.value) + 1;
+                    // Soumettre automatiquement le formulaire pour mettre à jour
+                    this.closest('form').submit();
+                }
+            });
+        });
+        
+        // Mise à jour des quantités lors de la modification directe
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                // Soumettre le formulaire pour mettre à jour
+                this.closest('form').submit();
+            });
+        });
+    });
+</script>
 {% endblock %}

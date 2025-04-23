@@ -6,6 +6,8 @@ from io import BytesIO
 import base64
 from app import db
 
+
+
 class Ticket(db.Model):
     __tablename__ = 'tickets'
     
@@ -21,6 +23,8 @@ class Ticket(db.Model):
     date_generation = db.Column(db.DateTime, default=datetime.utcnow)
     date_utilisation = db.Column(db.DateTime, nullable=True)
     
+    user = db.relationship('User', back_populates='tickets')
+
     def __init__(self, order_id, offer_id, user_id, cle_utilisateur, cle_achat):
         self.order_id = order_id
         self.offer_id = offer_id

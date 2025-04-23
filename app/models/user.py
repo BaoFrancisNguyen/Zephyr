@@ -28,9 +28,9 @@ class User(db.Model, UserMixin):
     est_2fa_active = db.Column(db.Boolean, default=False)
     
     # Relations
-    carts = db.relationship('Cart', backref='user', lazy=True)
-    orders = db.relationship('Order', backref='user', lazy=True)
-    tickets = db.relationship('Ticket', backref='user', lazy=True)
+    carts = db.relationship('Cart', back_populates='user', lazy=True)
+    orders = db.relationship('Order', back_populates='user', lazy=True)
+    tickets = db.relationship('Ticket', back_populates='user', lazy=True)
     
     def __init__(self, username, email, password, nom, prenom, role='utilisateur', est_verifie=False):
         self.username = username

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}JO E-Tickets{% endblock %}</title>
+    <title>{% block title %}Zephir Drones{% endblock %}</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,14 +14,93 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
+    <style>
+        /* Surcharge des styles pour Zephir Drones */
+        :root {
+            --primary: #0056b3;  /* Bleu Zephir */
+            --secondary: #6c757d;
+            --accent: #ff9800;  /* Orange accent */
+        }
+        
+        .navbar {
+            background-color: var(--primary);
+            background-image: linear-gradient(135deg, var(--primary) 0%, #004494 100%);
+        }
+        
+        .jumbotron {
+            background-color: var(--primary);
+            background-image: linear-gradient(135deg, var(--primary) 0%, #004494 100%);
+            border-radius: 0.5rem;
+        }
+        
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-toggle:hover {
+            background-color: #004494;
+            transform: scale(1.1);
+        }
+        
+        .chatbot-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 450px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .chatbot-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chatbot-messages {
+            height: 330px;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .chatbot-input-container {
+            padding: 10px;
+            border-top: 1px solid #eee;
+            display: flex;
+        }
+    </style>
+    
     {% block styles %}{% endblock %}
 </head>
 <body>
     <!-- Barre de navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                <i class="fas fa-ticket-alt me-2"></i>JO E-Tickets
+                <i class="fas fa-drone-alt me-2"></i>Zephir Drones
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -32,12 +111,15 @@
                         <a class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint and request.endpoint.startswith('offers.') %}active{% endif %}" href="{{ url_for('offers.index') }}">Offres</a>
+                        <a class="nav-link {% if request.endpoint and request.endpoint.startswith('offers.') %}active{% endif %}" href="{{ url_for('offers.index') }}">Nos drones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}" href="{{ url_for('main.about') }}">À propos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.contact' %}active{% endif %}" href="{{ url_for('main.contact') }}">Contact</a>
                     </li>
                     {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint and request.endpoint.startswith('tickets.') %}active{% endif %}" href="{{ url_for('tickets.index') }}">Mes billets</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint and request.endpoint.startswith('orders.') %}active{% endif %}" href="{{ url_for('orders.index') }}">Mes commandes</a>
                     </li>
@@ -105,8 +187,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5>JO E-Tickets</h5>
-                    <p>La billetterie officielle des Jeux olympiques 2024 en France.</p>
+                    <h5>Zephir Drones</h5>
+                    <p>Votre partenaire de vol depuis 2018.</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Liens utiles</h5>
@@ -126,10 +208,34 @@
             </div>
             <hr>
             <div class="text-center">
-                <p>&copy; 2024 JO E-Tickets. Tous droits réservés.</p>
+                <p>&copy; 2025 Zephir Drones. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Chatbot Toggle Button -->
+    <div class="chatbot-toggle" id="chatbot-toggle">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div class="chatbot-container" id="chatbot-container">
+        <div class="chatbot-header">
+            <h5 class="mb-0">Assistant Zephir</h5>
+            <button id="close-chatbot" style="background: none; border: none; color: white; font-size: 16px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="chat-messages" class="chatbot-messages"></div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chat-input" placeholder="Posez votre question..." 
+                   style="flex-grow: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <button id="send-message" 
+                    style="background-color: var(--primary); color: white; border: none; border-radius: 4px; padding: 0 15px; margin-left: 5px;">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -139,6 +245,127 @@
     
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- Chatbot Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chatbot functionality
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotContainer = document.getElementById('chatbot-container');
+            const closeChat = document.getElementById('close-chatbot');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const sendMessage = document.getElementById('send-message');
+            
+            // Sample responses for a simple rules-based chatbot
+            const responses = {
+                "bonjour": "Bonjour! Comment puis-je vous aider aujourd'hui avec nos drones Zephir?",
+                "salut": "Bonjour! Comment puis-je vous aider avec nos drones?",
+                "hello": "Bonjour! Comment puis-je vous assister aujourd'hui?",
+                "drone": "Nous proposons plusieurs modèles de drones allant de 80€ à 140€. Quel type de drone recherchez-vous?",
+                "prix": "Nos drones sont disponibles entre 80€ et 140€ selon les modèles et les fonctionnalités.",
+                "livraison": "Nous livrons partout en France sous 2-3 jours ouvrés. La livraison est gratuite pour toute commande supérieure à 100€.",
+                "garantie": "Tous nos drones sont garantis 2 ans. Nous offrons également une extension de garantie à 3 ans en option.",
+                "batterie": "L'autonomie de nos drones varie entre 20 et 35 minutes selon les modèles.",
+                "paiement": "Nous acceptons les paiements par carte bancaire, PayPal et en 3 ou 4 fois sans frais.",
+                "camera": "Nos modèles Pro 720 sont équipés d'une caméra HD 720p, tandis que les Elite 4K disposent d'une caméra 4K avec stabilisation électronique.",
+                "merci": "Je vous en prie! N'hésitez pas si vous avez d'autres questions.",
+                "au revoir": "Au revoir! Merci d'avoir discuté avec moi. À bientôt!",
+                "support": "Pour le support technique, vous pouvez nous contacter au 01 23 45 67 89 ou via support@zephir-drones.fr"
+            };
+            
+            function addBotMessage(message) {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'bot-message';
+                botDiv.innerHTML = `
+                    <div style="display: flex; margin-bottom: 15px;">
+                        <div style="background-color: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                            <i class="fas fa-robot" style="font-size: 14px;"></i>
+                        </div>
+                        <div style="background-color: #f1f1f1; padding: 10px; border-radius: 10px; max-width: 80%;">
+                            ${message}
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(botDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function addUserMessage(message) {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user-message';
+                userDiv.innerHTML = `
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                        <div style="background-color: var(--primary); color: white; padding: 10px; border-radius: 10px; max-width: 80%;">
+                            ${message}
+                        </div>
+                        <div style="background-color: #ddd; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 10px;">
+                            <i class="fas fa-user" style="font-size: 14px;"></i>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(userDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to get chatbot response
+            function getBotResponse(message) {
+                message = message.toLowerCase().trim();
+                
+                // Check for exact matches
+                if (responses[message]) {
+                    return responses[message];
+                }
+                
+                // Check for partial matches
+                for (const key in responses) {
+                    if (message.includes(key)) {
+                        return responses[key];
+                    }
+                }
+                
+                // Default response
+                return "Je suis désolé, je n'ai pas compris votre question. Vous pouvez me demander des informations sur nos drones, les prix, la livraison, la garantie ou le paiement.";
+            }
+            
+            // Event listeners
+            chatbotToggle.addEventListener('click', function() {
+                chatbotContainer.style.display = 'block';
+                chatbotToggle.style.display = 'none';
+                
+                // Add welcome message if it's the first time
+                if (chatMessages.children.length === 0) {
+                    addBotMessage("Bonjour! Je suis l'assistant Zephir. Comment puis-je vous aider aujourd'hui?");
+                }
+            });
+            
+            closeChat.addEventListener('click', function() {
+                chatbotContainer.style.display = 'none';
+                chatbotToggle.style.display = 'flex';
+            });
+            
+            sendMessage.addEventListener('click', function() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    addUserMessage(message);
+                    
+                    // Simulate typing delay
+                    setTimeout(function() {
+                        const botResponse = getBotResponse(message);
+                        addBotMessage(botResponse);
+                    }, 600);
+                    
+                    chatInput.value = '';
+                }
+            });
+            
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage.click();
+                }
+            });
+        });
+    </script>
     
     <!-- Cart counter -->
     {% if current_user.is_authenticated %}

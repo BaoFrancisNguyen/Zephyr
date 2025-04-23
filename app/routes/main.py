@@ -54,3 +54,14 @@ def test_image():
     </body>
     </html>
     """
+
+
+@main_bp.route('/support')
+def support():
+    """Page de support technique."""
+    return render_template('support.html')
+
+@main_bp.route('/tutorials')
+def tutorials():
+    """Page de tutoriels et guides."""
+    return render_template('tutorials.html')

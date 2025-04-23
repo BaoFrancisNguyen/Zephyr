@@ -1,56 +1,56 @@
 {% extends "base.html" %}
 
-{% block title %}JO E-Tickets - Accueil{% endblock %}
+{% block title %}Zephir Drones - Votre partenaire de vol{% endblock %}
 
 {% block content %}
 <!-- Bannière principale avec image de fond -->
-<div class="jumbotron text-white p-5 rounded mb-4" style="background: linear-gradient(rgba(13, 110, 253, 0.8), rgba(10, 88, 202, 0.8)), url('{{ url_for('static', filename='images/olympic-banner.jpg') }}') center/cover no-repeat;">
+<div class="jumbotron text-white p-5 rounded mb-4" style="background: linear-gradient(rgba(0, 86, 179, 0.8), rgba(0, 56, 118, 0.8)), url('{{ url_for('static', filename='images/drone-banner.jpg') }}') center/cover no-repeat;">
     <div class="container">
-        <h1 class="display-4">Bienvenue sur JO E-Tickets</h1>
-        <p class="lead">La billetterie officielle des Jeux olympiques 2024 en France.</p>
+        <h1 class="display-4">Bienvenue sur Zephir Drones</h1>
+        <p class="lead">Découvrez l'expérience de vol ultime avec notre gamme de drones haute performance</p>
         <hr class="my-4">
-        <p>Achetez vos billets en ligne en toute sécurité et vivez une expérience inoubliable aux Jeux olympiques 2024.</p>
+        <p>Des drones adaptés à tous les niveaux, de débutants à experts, à des prix accessibles (80€-140€)</p>
         <a class="btn btn-light btn-lg" href="{{ url_for('offers.index') }}" role="button">
-            <i class="fas fa-ticket-alt me-2"></i>Voir les offres
+            <i class="fas fa-drone-alt me-2"></i>Voir nos drones
         </a>
     </div>
 </div>
 
 <!-- Carrousel d'images -->
-<div id="olympicsCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+<div id="dronesCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
     <div class="carousel-indicators">
-        <button type="button" data-bs-target="#olympicsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#olympicsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#olympicsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#dronesCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#dronesCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#dronesCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
     <div class="carousel-inner rounded shadow">
         <div class="carousel-item active">
-            <img src="{{ url_for('static', filename='images/stadium.jpg') }}" class="d-block w-100" alt="Stade olympique">
+            <img src="{{ url_for('static', filename='images/drone1.jpg') }}" class="d-block w-100" alt="Drone en vol">
             <div class="carousel-caption d-none d-md-block">
-                <h5>Stade olympique</h5>
-                <p>Découvrez le magnifique stade qui accueillera les épreuves principales.</p>
+                <h5>Zephir X100</h5>
+                <p>Notre drone d'entrée de gamme parfait pour débuter - 89,99€</p>
             </div>
         </div>
         <div class="carousel-item">
-            <img src="{{ url_for('static', filename='images/swimming.jpg') }}" class="d-block w-100" alt="Natation">
+            <img src="{{ url_for('static', filename='images/drone2.jpg') }}" class="d-block w-100" alt="Drone avec caméra">
             <div class="carousel-caption d-none d-md-block">
-                <h5>Bassin olympique</h5>
-                <p>Assistez aux compétitions de natation dans un cadre exceptionnel.</p>
+                <h5>Zephir Pro 720</h5>
+                <p>Équipé d'une caméra HD et stabilisation avancée - 119,99€</p>
             </div>
         </div>
         <div class="carousel-item">
-            <img src="{{ url_for('static', filename='images/athletics.jpg') }}" class="d-block w-100" alt="Athlétisme">
+            <img src="{{ url_for('static', filename='images/drone3.jpg') }}" class="d-block w-100" alt="Drone professionnel">
             <div class="carousel-caption d-none d-md-block">
-                <h5>Épreuves d'athlétisme</h5>
-                <p>Ne manquez pas les épreuves reines des Jeux olympiques.</p>
+                <h5>Zephir Elite 4K</h5>
+                <p>Notre modèle premium avec caméra 4K et suivi automatique - 139,99€</p>
             </div>
         </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#olympicsCarousel" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#dronesCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Précédent</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#olympicsCarousel" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#dronesCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Suivant</span>
     </button>
@@ -59,66 +59,63 @@
 <!-- Avantages -->
 <div class="row mb-5">
     <div class="col-12">
-        <h2 class="border-bottom pb-2 mb-4">Nos avantages</h2>
+        <h2 class="border-bottom pb-2 mb-4">Pourquoi choisir Zephir?</h2>
     </div>
     
     <div class="col-md-4 mb-3">
         <div class="card h-100 shadow-sm">
-            <img src="{{ url_for('static', filename='images/security.jpg') }}" class="card-img-top" height="180" alt="Sécurité">
             <div class="card-body text-center">
-                <i class="fas fa-lock fa-3x text-primary mb-3"></i>
-                <h3 class="card-title">Sécurisé</h3>
-                <p class="card-text">Système de billetterie électronique hautement sécurisé, protégé contre la fraude.</p>
+                <i class="fas fa-medal fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">Qualité Premium</h3>
+                <p class="card-text">Nos drones sont fabriqués avec des matériaux durables et résistants aux chocs.</p>
             </div>
         </div>
     </div>
     <div class="col-md-4 mb-3">
         <div class="card h-100 shadow-sm">
-            <img src="{{ url_for('static', filename='images/mobile.jpg') }}" class="card-img-top" height="180" alt="Mobile">
             <div class="card-body text-center">
-                <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
-                <h3 class="card-title">Pratique</h3>
-                <p class="card-text">Recevez vos billets directement sur votre téléphone, plus besoin de billets papier.</p>
+                <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">Support 24/7</h3>
+                <p class="card-text">Une équipe disponible pour vous accompagner et répondre à toutes vos questions.</p>
             </div>
         </div>
     </div>
     <div class="col-md-4 mb-3">
         <div class="card h-100 shadow-sm">
-            <img src="{{ url_for('static', filename='images/family.jpg') }}" class="card-img-top" height="180" alt="Famille">
             <div class="card-body text-center">
-                <i class="fas fa-users fa-3x text-primary mb-3"></i>
-                <h3 class="card-title">Flexible</h3>
-                <p class="card-text">Plusieurs options disponibles : billets solo, duo ou familiaux (jusqu'à 4 personnes).</p>
+                <i class="fas fa-tags fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">Prix Accessible</h3>
+                <p class="card-text">Des drones haute performance entre 80€ et 140€ adaptés à tous les budgets.</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Offres en vedette -->
+<!-- Drones en vedette -->
 <div class="row mb-5">
     <div class="col-12">
-        <h2 class="border-bottom pb-2 mb-4">Offres en vedette</h2>
+        <h2 class="border-bottom pb-2 mb-4">Nos drones vedettes</h2>
     </div>
     
-    {% if featured_offers %}
-        {% for offer in featured_offers %}
+    {% if featured_drones %}
+        {% for drone in featured_drones %}
         <div class="col-md-4 mb-3">
             <div class="card h-100 shadow-sm">
-                {% if offer.image %}
-                <img src="/static/images/{{ offer.image }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ offer.titre }}">
+                {% if drone.image %}
+                <img src="{{ url_for('static', filename='images/' + drone.image) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ drone.titre }}">
                 {% else %}
-                <img src="/static/images/default-offer.jpg" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ offer.titre }}">
+                <img src="{{ url_for('static', filename='images/default-drone.jpg') }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ drone.titre }}">
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ offer.titre }}</h5>
-                    <p class="card-text">{{ offer.description|truncate(100) }}</p>
+                    <h5 class="card-title">{{ drone.titre }}</h5>
+                    <p class="card-text">{{ drone.description|truncate(100) }}</p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-primary">{{ offer.type|capitalize }}</span>
-                        <span class="fs-5 fw-bold text-primary">{{ offer.prix }} €</span>
+                        <span class="badge bg-primary">{{ drone.type|capitalize }}</span>
+                        <span class="fs-5 fw-bold text-primary">{{ drone.prix }} €</span>
                     </div>
                 </div>
                 <div class="card-footer bg-white border-top-0">
-                    <a href="{{ url_for('offers.detail', offer_id=offer.id) }}" class="btn btn-primary w-100">
+                    <a href="{{ url_for('offers.detail', offer_id=drone.id) }}" class="btn btn-primary w-100">
                         <i class="fas fa-info-circle me-2"></i>Voir les détails
                     </a>
                 </div>
@@ -126,110 +123,149 @@
         </div>
         {% endfor %}
     {% else %}
-        <div class="col-12">
-            <div class="alert alert-info">
-                Aucune offre en vedette pour le moment. Consultez toutes nos offres disponibles.
+        <!-- Affichage statique si pas de données dynamiques -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ url_for('static', filename='images/default-drone.jpg') }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Zephir X100">
+                <div class="card-body">
+                    <h5 class="card-title">Zephir X100</h5>
+                    <p class="card-text">Drone d'entrée de gamme parfait pour les débutants. Facile à piloter avec une autonomie de 20 minutes.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary">Débutant</span>
+                        <span class="fs-5 fw-bold text-primary">89,99 €</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <a href="{{ url_for('offers.index') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-info-circle me-2"></i>Voir les détails
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ url_for('static', filename='images/default-drone.jpg') }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Zephir Pro 720">
+                <div class="card-body">
+                    <h5 class="card-title">Zephir Pro 720</h5>
+                    <p class="card-text">Notre modèle le plus populaire avec caméra HD 720p intégrée et stabilisation gyroscopique.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary">Intermédiaire</span>
+                        <span class="fs-5 fw-bold text-primary">119,99 €</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <a href="{{ url_for('offers.index') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-info-circle me-2"></i>Voir les détails
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ url_for('static', filename='images/default-drone.jpg') }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Zephir Elite 4K">
+                <div class="card-body">
+                    <h5 class="card-title">Zephir Elite 4K</h5>
+                    <p class="card-text">Notre modèle haut de gamme avec caméra 4K, suivi automatique et 35 minutes d'autonomie.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary">Expert</span>
+                        <span class="fs-5 fw-bold text-primary">139,99 €</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <a href="{{ url_for('offers.index') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-info-circle me-2"></i>Voir les détails
+                    </a>
+                </div>
             </div>
         </div>
     {% endif %}
     
     <div class="col-12 text-center mt-3">
         <a href="{{ url_for('offers.index') }}" class="btn btn-outline-primary">
-            Voir toutes les offres <i class="fas fa-arrow-right ms-2"></i>
+            Voir tous nos drones <i class="fas fa-arrow-right ms-2"></i>
         </a>
     </div>
 </div>
 
-<!-- Comment ça marche -->
-<div class="row mb-5">
-    <div class="col-12">
-        <h2 class="border-bottom pb-2 mb-4">Comment ça marche</h2>
+<!-- À propos de Zephir -->
+<div class="row mb-5 bg-light py-4 rounded">
+    <div class="col-md-6 mb-4">
+        <h2 class="mb-3">À propos de Zephir</h2>
+        <p class="lead">Fabricant français de drones de qualité depuis 2018</p>
+        <p>Chez Zephir, nous sommes passionnés par les drones et avons pour mission de rendre cette technologie accessible à tous. Nos ingénieurs conçoivent des drones qui allient performance, facilité d'utilisation et prix abordable.</p>
+        <p>Tous nos drones sont assemblés dans nos ateliers en France, garantissant un contrôle qualité rigoureux et un support client irréprochable.</p>
+        <a href="{{ url_for('main.about') }}" class="btn btn-primary mt-2">
+            <i class="fas fa-info-circle me-2"></i>En savoir plus
+        </a>
     </div>
-    
-    <div class="col-md-3 text-center mb-3">
-        <div class="bg-light p-4 rounded shadow-sm h-100">
-            <div class="circle-icon mb-3">1</div>
-            <h4>Créez un compte</h4>
-            <p class="mb-0">Inscrivez-vous en quelques clics pour accéder à notre plateforme.</p>
-        </div>
-    </div>
-    
-    <div class="col-md-3 text-center mb-3">
-        <div class="bg-light p-4 rounded shadow-sm h-100">
-            <div class="circle-icon mb-3">2</div>
-            <h4>Choisissez vos billets</h4>
-            <p class="mb-0">Parcourez les offres et sélectionnez celles qui vous intéressent.</p>
-        </div>
-    </div>
-    
-    <div class="col-md-3 text-center mb-3">
-        <div class="bg-light p-4 rounded shadow-sm h-100">
-            <div class="circle-icon mb-3">3</div>
-            <h4>Effectuez le paiement</h4>
-            <p class="mb-0">Payez en toute sécurité avec notre système de paiement protégé.</p>
-        </div>
-    </div>
-    
-    <div class="col-md-3 text-center mb-3">
-        <div class="bg-light p-4 rounded shadow-sm h-100">
-            <div class="circle-icon mb-3">4</div>
-            <h4>Recevez vos e-billets</h4>
-            <p class="mb-0">Téléchargez vos billets électroniques avec QR code sécurisé.</p>
-        </div>
+    <div class="col-md-6">
+        <img src="{{ url_for('static', filename='images/atelier.jpg') }}" alt="À propos de Zephir" class="img-fluid rounded shadow">
     </div>
 </div>
 
-<!-- Destinations olympiques -->
+<!-- Témoignages -->
 <div class="row mb-5">
     <div class="col-12">
-        <h2 class="border-bottom pb-2 mb-4">Découvrez les sites olympiques</h2>
+        <h2 class="border-bottom pb-2 mb-4">Ce que disent nos clients</h2>
     </div>
     
-    <div class="col-md-6 mb-4">
-        <div class="card bg-dark text-white shadow">
-            <img src="/static/images/stadium.jpg" class="card-img" style="height: 300px; object-fit: cover;" alt="Paris">
-            <div class="card-img-overlay" style="background: rgba(0,0,0,0.4);">
-                <h3 class="card-title">Paris</h3>
-                <p class="card-text">La ville lumière accueille les Jeux olympiques 2024 avec plusieurs sites emblématiques.</p>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="mb-3 text-warning">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="card-text">"Le Zephir Pro 720 est incroyable! Facile à piloter même pour un débutant. La qualité d'image est excellente et le service client est très réactif."</p>
+                <div class="d-flex align-items-center mt-4">
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">Thomas L.</h6>
+                        <p class="text-muted small mb-0">Client depuis 6 mois</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
-    <div class="col-md-6 mb-4">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="card bg-dark text-white shadow h-100">
-                    <img src="/static/images/stadium.jpg" class="card-img h-100" style="object-fit: cover;" alt="Versailles">
-                    <div class="card-img-overlay" style="background: rgba(0,0,0,0.4);">
-                        <h5 class="card-title">Versailles</h5>
-                        <p class="card-text small">Site des compétitions équestres.</p>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="mb-3 text-warning">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="card-text">"J'utilise mon Zephir Elite 4K pour mes projets vidéo et je suis impressionné par la stabilité et la qualité d'image. Un excellent rapport qualité-prix!"</p>
+                <div class="d-flex align-items-center mt-4">
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">Sophie M.</h6>
+                        <p class="text-muted small mb-0">Cliente depuis 1 an</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card bg-dark text-white shadow h-100">
-                    <img src="/static/images/stadium.jpg" class="card-img h-100" style="object-fit: cover;" alt="Marseille">
-                    <div class="card-img-overlay" style="background: rgba(0,0,0,0.4);">
-                        <h5 class="card-title">Marseille</h5>
-                        <p class="card-text small">Site des épreuves de voile.</p>
-                    </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="mb-3 text-warning">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card bg-dark text-white shadow h-100">
-                    <img src="/static/images/stadium.jpg" class="card-img h-100" style="object-fit: cover;" alt="Stade de France">
-                    <div class="card-img-overlay" style="background: rgba(0,0,0,0.4);">
-                        <h5 class="card-title">Stade de France</h5>
-                        <p class="card-text small">Site principal des Jeux.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card bg-dark text-white shadow h-100">
-                    <img src="/static/images/swimming.jpg" class="card-img h-100" style="object-fit: cover;" alt="La Seine">
-                    <div class="card-img-overlay" style="background: rgba(0,0,0,0.4);">
-                        <h5 class="card-title">La Seine</h5>
-                        <p class="card-text small">Lieu de la cérémonie d'ouverture.</p>
+                <p class="card-text">"Parfait pour débuter! Le Zephir X100 est stable et facile à contrôler. La batterie dure un peu moins que prévu mais reste suffisante pour s'amuser."</p>
+                <div class="d-flex align-items-center mt-4">
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">Antoine R.</h6>
+                        <p class="text-muted small mb-0">Client depuis 3 mois</p>
                     </div>
                 </div>
             </div>
@@ -237,64 +273,81 @@
     </div>
 </div>
 
-<!-- Countdown -->
-<div class="row mb-4">
+<!-- Support et SAV -->
+<div class="row mb-5">
     <div class="col-12">
-        <div class="card shadow">
-            <div class="card-body text-center">
-                <h3 class="card-title mb-4">Lancement des Jeux olympiques 2024</h3>
-                <div id="countdown" class="d-flex justify-content-center mt-4">
-                    <div class="px-3">
-                        <div id="days" class="display-4 fw-bold">00</div>
-                        <span>Jours</span>
-                    </div>
-                    <div class="px-3">
-                        <div id="hours" class="display-4 fw-bold">00</div>
-                        <span>Heures</span>
-                    </div>
-                    <div class="px-3">
-                        <div id="minutes" class="display-4 fw-bold">00</div>
-                        <span>Minutes</span>
-                    </div>
-                    <div class="px-3">
-                        <div id="seconds" class="display-4 fw-bold">00</div>
-                        <span>Secondes</span>
-                    </div>
-                </div>
+        <h2 class="border-bottom pb-2 mb-4">Support et SAV</h2>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-tools fa-3x text-primary mb-3"></i>
+                <h4>Service de réparation</h4>
+                <p>Un service après-vente réactif pour vous assister en cas de problème avec votre drone.</p>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-outline-primary">En savoir plus</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                <h4>Tutoriels et guides</h4>
+                <p>Des ressources pour vous aider à tirer le meilleur parti de votre drone Zephir.</p>
+                <a href="{{ url_for('main.tutorials') }}" class="btn btn-outline-primary">Voir les tutoriels</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-comment-alt fa-3x text-primary mb-3"></i>
+                <h4>Assistance directe</h4>
+                <p>Notre équipe de support est disponible par téléphone, email ou chat du lundi au samedi.</p>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-outline-primary">Nous contacter</a>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Call to action -->
+<div class="bg-primary text-white p-5 rounded text-center mb-5">
+    <h2 class="mb-3">Prêt à prendre votre envol?</h2>
+    <p class="lead mb-4">Découvrez notre gamme de drones haute performance à prix accessibles</p>
+    <a href="{{ url_for('offers.index') }}" class="btn btn-light btn-lg">
+        <i class="fas fa-shopping-cart me-2"></i>Explorer nos drones
+    </a>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Countdown to Olympics 2024
-    // La date d'ouverture des JO 2024 est le 26 juillet 2024
-    const olympicsDate = new Date("July 26, 2024 20:00:00").getTime();
-    
-    // Mise à jour du compte à rebours toutes les secondes
-    const countdown = setInterval(function() {
-        const now = new Date().getTime();
-        const distance = olympicsDate - now;
-        
-        // Calcul des jours, heures, minutes et secondes
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        // Affichage du résultat
-        document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
-        document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
-        document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
-        document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
-        
-        // Si le compte à rebours est terminé
-        if (distance < 0) {
-            clearInterval(countdown);
-            document.getElementById("countdown").innerHTML = "<h3>Les Jeux olympiques ont commencé !</h3>";
-        }
-    }, 1000);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation des cartes
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
 </script>
+
+<style>
+    .card {
+        transition: all 0.3s ease;
+        opacity: 0.8;
+        transform: translateY(10px);
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>
 {% endblock %}

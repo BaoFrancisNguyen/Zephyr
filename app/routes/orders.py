@@ -3,9 +3,10 @@ from flask_login import login_required, current_user
 from app import db
 from app.models.order import Order, OrderItem
 from app.models.cart import Cart
-from app.models.ticket import Ticket
+from app.models.offer import Offer
 from app.services.payment_service import process_payment
 from datetime import datetime
+from app.forms.order_forms import ShippingAddressForm
 
 orders_bp = Blueprint('orders', __name__, url_prefix='/orders')
 
@@ -33,11 +34,11 @@ def detail(order_id):
     
     return render_template('orders/detail.html', order=order)
 
-@orders_bp.route('/create', methods=['POST'])
+@orders_bp.route('/checkout', methods=['GET', 'POST'])
 @login_required
-def create():
+def checkout():
     """
-    Crée une nouvelle commande à partir du panier de l'utilisateur.
+    Page de finalisation de commande avec formulaire d'adresse.
     """
     # Récupérer le panier de l'utilisateur
     cart = Cart.query.filter_by(user_id=current_user.id).first()
@@ -48,123 +49,93 @@ def create():
     
     # Vérifier la disponibilité des articles
     for item in cart.items:
-        if not item.offer.is_available() or item.offer.disponibilite < item.quantite:
-            flash(f'L\'offre "{item.offer.titre}" n\'est plus disponible en quantité suffisante.', 'danger')
+        if not item.offer.is_available() or item.offer.stock < item.quantite:
+            flash(f'Le produit "{item.offer.titre}" n\'est plus disponible en quantité suffisante.', 'danger')
             return redirect(url_for('cart.index'))
     
-    # Créer la commande
-    order = Order(
-        user_id=current_user.id,
-        total=cart.total(),
-        adresse_email=current_user.email
-    )
+    # Créer le formulaire d'adresse de livraison
+    form = ShippingAddressForm()
     
-    db.session.add(order)
-    db.session.commit()
-    
-    # Ajouter les articles à la commande
-    for item in cart.items:
-        order.add_item(item.offer, item.quantite, item.prix_unitaire)
+    if form.validate_on_submit():
+        # Formater l'adresse de livraison
+        shipping_address = f"{form.nom.data} {form.prenom.data}\n{form.adresse.data}\n{form.code_postal.data} {form.ville.data}\n{form.pays.data}\nTél: {form.telephone.data}"
         
-        # Réduire la disponibilité de l'offre
-        item.offer.decrease_availability(item.quantite)
-    
-    # Vider le panier
-    cart.clear()
-    
-    # Rediriger vers le paiement direct au lieu de la page de paiement problématique
-    return redirect(url_for('orders.direct_payment', order_id=order.id))
-
-@orders_bp.route('/direct_payment/<int:order_id>')
-@login_required
-def direct_payment(order_id):
-    """
-    Traite directement le paiement sans passer par le formulaire.
-    """
-    order = Order.query.get_or_404(order_id)
-    
-    # Vérifier que l'utilisateur est bien le propriétaire de la commande
-    if order.user_id != current_user.id:
-        flash('Vous n\'êtes pas autorisé à accéder à cette commande.', 'danger')
-        return redirect(url_for('orders.index'))
-    
-    # Vérifier que la commande n'est pas déjà payée
-    if order.statut == 'payée':
-        flash('Cette commande a déjà été payée.', 'info')
-        return redirect(url_for('orders.confirmation', order_id=order.id))
-    
-    # Vérifier que la commande n'est pas annulée
-    if order.statut == 'annulée':
-        flash('Cette commande a été annulée.', 'warning')
-        return redirect(url_for('orders.index'))
-    
-    # Simuler un paiement réussi
-    order.set_paid()
-    tickets = order.generate_tickets(current_user)
-    
-    flash('Paiement effectué avec succès (mode de test).', 'success')
-    return redirect(url_for('orders.confirmation', order_id=order.id))
-
-@orders_bp.route('/<int:order_id>/payment', methods=['GET', 'POST'])
-@login_required
-def payment(order_id):
-    """
-    Affiche et traite la page de paiement pour une commande.
-    """
-    order = Order.query.get_or_404(order_id)
-    
-    # Vérifier que l'utilisateur est bien le propriétaire de la commande
-    if order.user_id != current_user.id:
-        flash('Vous n\'êtes pas autorisé à accéder à cette commande.', 'danger')
-        return redirect(url_for('orders.index'))
-    
-    # Vérifier que la commande n'est pas déjà payée
-    if order.statut == 'payée':
-        flash('Cette commande a déjà été payée.', 'info')
-        return redirect(url_for('orders.confirmation', order_id=order.id))
-    
-    # Vérifier que la commande n'est pas annulée
-    if order.statut == 'annulée':
-        flash('Cette commande a été annulée.', 'warning')
-        return redirect(url_for('orders.index'))
-    
-    if request.method == 'POST':
-        # Récupérer les informations de paiement
-        card_number = request.form.get('card_number')
-        expiry_month = request.form.get('expiry_month')
-        expiry_year = request.form.get('expiry_year')
-        cvv = request.form.get('cvv')
-        
-        # Traiter le paiement
-        payment_result = process_payment(
-            order_id=order.id,
-            card_number=card_number,
-            expiry_month=expiry_month,
-            expiry_year=expiry_year,
-            cvv=cvv,
-            amount=order.total
+        # Créer la commande
+        order = Order(
+            user_id=current_user.id,
+            total=cart.total() + (0 if cart.total() >= 100 else 5.99),  # Ajouter frais de livraison si nécessaire
+            adresse_email=form.email.data,
+            adresse_livraison=shipping_address
         )
         
-        if payment_result.success:
-            # Mettre à jour le statut de la commande
-            order.set_paid()
+        db.session.add(order)
+        db.session.commit()
+        
+        # Ajouter les articles à la commande
+        for item in cart.items:
+            order.add_item(item.offer, item.quantite, item.prix_unitaire)
             
-            # Générer les billets
-            tickets = order.generate_tickets(current_user)
-            
-            flash('Paiement effectué avec succès.', 'success')
-            return redirect(url_for('orders.confirmation', order_id=order.id))
-        else:
-            flash(f'Erreur lors du paiement : {payment_result.message}', 'danger')
+            # Réduire le stock du produit
+            item.offer.decrease_stock(item.quantite)
+        
+        # Vider le panier
+        cart.clear()
+        
+        # Stocker l'ID de la commande en session pour la page de paiement
+        session['order_id_for_payment'] = order.id
+        
+        # Rediriger vers la page de paiement
+        return redirect(url_for('orders.payment'))
     
-    # Pour GET request ou après un échec de paiement
+    return render_template('orders/checkout.html', cart=cart, form=form)
+
+@orders_bp.route('/payment', methods=['GET', 'POST'])
+@login_required
+def payment():
+    """
+    Page de paiement pour une commande.
+    """
+    # Récupérer l'ID de la commande depuis la session
+    order_id = session.get('order_id_for_payment')
+    
+    if not order_id:
+        flash('Aucune commande en attente de paiement.', 'warning')
+        return redirect(url_for('orders.index'))
+    
+    order = Order.query.get_or_404(order_id)
+    
+    # Vérifier que l'utilisateur est bien le propriétaire de la commande
+    if order.user_id != current_user.id:
+        flash('Vous n\'êtes pas autorisé à accéder à cette commande.', 'danger')
+        return redirect(url_for('orders.index'))
+    
+    # Vérifier que la commande n'est pas déjà payée
+    if order.statut != 'en attente':
+        flash('Cette commande a déjà été traitée.', 'info')
+        return redirect(url_for('orders.detail', order_id=order.id))
+    
+    if request.method == 'POST':
+        # Pour la démonstration, nous simulons simplement un paiement réussi
+        # Dans une application réelle, vous intégreriez un service de paiement ici
+        
+        # Marquer la commande comme payée
+        order.set_paid()
+        
+        # Supprimer l'ID de la commande de la session
+        session.pop('order_id_for_payment', None)
+        
+        # Envoyer un email de confirmation (simulé ici)
+        # send_confirmation_email(order)
+        
+        return redirect(url_for('orders.confirmation', order_id=order.id))
+    
     return render_template('orders/payment.html', order=order)
 
 @orders_bp.route('/<int:order_id>/confirmation')
 @login_required
 def confirmation(order_id):
     """
-    Affiche la page de confirmation après un paiement réussi.
+    Page de confirmation après un paiement réussi.
     """
     order = Order.query.get_or_404(order_id)
     
@@ -176,7 +147,7 @@ def confirmation(order_id):
     # Vérifier que la commande est bien payée
     if order.statut != 'payée':
         flash('Cette commande n\'a pas encore été payée.', 'warning')
-        return redirect(url_for('orders.payment', order_id=order.id))
+        return redirect(url_for('orders.payment'))
     
     return render_template('orders/confirmation.html', order=order)
 
@@ -184,7 +155,7 @@ def confirmation(order_id):
 @login_required
 def cancel(order_id):
     """
-    Annule une commande.
+    Annule une commande (si possible).
     """
     order = Order.query.get_or_404(order_id)
     
@@ -193,15 +164,58 @@ def cancel(order_id):
         flash('Vous n\'êtes pas autorisé à accéder à cette commande.', 'danger')
         return redirect(url_for('orders.index'))
     
-    # Vérifier que la commande peut être annulée
-    if order.statut == 'annulée':
-        flash('Cette commande a déjà été annulée.', 'info')
-        return redirect(url_for('orders.index'))
+    # Vérifier que la commande peut être annulée (en attente ou payée mais pas expédiée)
+    if order.statut not in ['en attente', 'payée']:
+        flash('Cette commande ne peut pas être annulée car elle a déjà été expédiée.', 'warning')
+        return redirect(url_for('orders.detail', order_id=order.id))
     
     # Annuler la commande
     if order.cancel():
-        flash('Commande annulée avec succès.', 'success')
+        flash('Commande annulée avec succès. Les produits ont été remis en stock.', 'success')
     else:
         flash('Erreur lors de l\'annulation de la commande.', 'danger')
     
     return redirect(url_for('orders.index'))
+
+@orders_bp.route('/<int:order_id>/track')
+@login_required
+def track(order_id):
+    """
+    Page de suivi de commande.
+    """
+    order = Order.query.get_or_404(order_id)
+    
+    # Vérifier que l'utilisateur est bien le propriétaire de la commande
+    if order.user_id != current_user.id:
+        flash('Vous n\'êtes pas autorisé à accéder à cette commande.', 'danger')
+        return redirect(url_for('orders.index'))
+    
+    # Vérifier que la commande est expédiée
+    if order.statut not in ['expédiée', 'livrée']:
+        flash('Cette commande n\'est pas encore expédiée.', 'info')
+        return redirect(url_for('orders.detail', order_id=order.id))
+    
+    # Dans une application réelle, vous récupéreriez des informations de suivi 
+    # auprès du transporteur avec le numéro de suivi
+    tracking_info = {
+        'status': order.statut,
+        'carrier': 'Transporteur Express',
+        'tracking_number': order.numero_suivi or '123456789',
+        'estimated_delivery': 'Sous 2-3 jours ouvrés',
+        'history': [
+            {
+                'date': order.date_expedition.strftime('%d/%m/%Y %H:%M'),
+                'status': 'Colis expédié',
+                'location': 'Centre logistique Paris'
+            }
+        ]
+    }
+    
+    if order.statut == 'livrée':
+        tracking_info['history'].append({
+            'date': order.date_livraison.strftime('%d/%m/%Y %H:%M'),
+            'status': 'Colis livré',
+            'location': 'Adresse de livraison'
+        })
+    
+    return render_template('orders/tracking.html', order=order, tracking_info=tracking_info)

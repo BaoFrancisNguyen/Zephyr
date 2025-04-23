@@ -6,12 +6,14 @@ class CartItem(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     cart_id = db.Column(db.Integer, db.ForeignKey('carts.id'), nullable=False)
-    offer_id = db.Column(db.Integer, db.ForeignKey('offers.id'), nullable=False)
+    offer_id = db.Column(db.Integer, db.ForeignKey('offers.id'), nullable=False)  # Garde offer_id pour compatibilité
     quantite = db.Column(db.Integer, default=1)
     prix_unitaire = db.Column(db.Float, nullable=False)
     
     # Relations
-    offer = db.relationship('Offer')
+    
+    offer = db.relationship('Offer', back_populates='cart_items')
+    cart = db.relationship('Cart', back_populates='items')
     
     def __init__(self, cart_id, offer_id, quantite, prix_unitaire):
         self.cart_id = cart_id
@@ -35,13 +37,14 @@ class Cart(db.Model):
     date_modification = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relations
-    items = db.relationship('CartItem', backref='cart', lazy=True, cascade="all, delete-orphan")
+    items = db.relationship('CartItem', back_populates='cart', lazy=True, cascade="all, delete-orphan")
+    user = db.relationship('User', back_populates='carts')
     
     def __init__(self, user_id):
         self.user_id = user_id
     
     def add_item(self, offer, quantite=1):
-        """Ajoute un élément au panier."""
+        """Ajoute un drone au panier."""
         from app.models.offer import Offer
         
         # Vérifier si l'offre existe
@@ -52,7 +55,7 @@ class Cart(db.Model):
             return False
         
         # Vérifier la disponibilité
-        if not offer.is_available() or offer.disponibilite < quantite:
+        if not offer.is_available() or offer.stock < quantite:
             return False
         
         # Vérifier si l'élément existe déjà dans le panier
@@ -75,10 +78,14 @@ class Cart(db.Model):
         return True
     
     def update_item(self, item_id, quantite):
-        """Met à jour la quantité d'un élément du panier."""
+        """Met à jour la quantité d'un drone dans le panier."""
         item = CartItem.query.get(item_id)
         
         if not item or item.cart_id != self.id:
+            return False
+        
+        # Vérifier la disponibilité
+        if item.offer.stock < quantite:
             return False
         
         if quantite <= 0:
@@ -90,7 +97,7 @@ class Cart(db.Model):
         return True
     
     def remove_item(self, item_id):
-        """Supprime un élément du panier."""
+        """Supprime un drone du panier."""
         item = CartItem.query.get(item_id)
         
         if not item or item.cart_id != self.id:
@@ -113,7 +120,7 @@ class Cart(db.Model):
         return sum(item.sous_total() for item in self.items)
     
     def count_items(self):
-        """Compte le nombre d'éléments dans le panier."""
+        """Compte le nombre total d'articles dans le panier."""
         return sum(item.quantite for item in self.items)
     
     def to_dict(self):
@@ -124,8 +131,10 @@ class Cart(db.Model):
             'items': [
                 {
                     'id': item.id,
-                    'offer_id': item.offer_id,
+                    'drone_id': item.offer_id,
                     'titre': item.offer.titre,
+                    'type': item.offer.type,
+                    'niveau': item.offer.niveau,
                     'quantite': item.quantite,
                     'prix_unitaire': item.prix_unitaire,
                     'sous_total': item.sous_total()

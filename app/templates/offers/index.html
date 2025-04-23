@@ -1,76 +1,192 @@
 {% extends "base.html" %}
 
-{% block title %}JO E-Tickets - Offres{% endblock %}
+{% block title %}Zephir Drones - Catalogue{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Nos offres</h1>
+<h1 class="mb-4">Nos drones</h1>
 
 <!-- Filtres -->
 <div class="filter-bar mb-4">
     <div class="row">
         <div class="col-md-6">
             <div class="mb-md-0 mb-3">
-                <label for="offer-type-filter" class="form-label">Filtrer par type :</label>
-                <select id="offer-type-filter" class="form-select">
-                    <option value="">Tous les types</option>
-                    <option value="solo" {% if selected_type == 'solo' %}selected{% endif %}>Solo (1 personne)</option>
-                    <option value="duo" {% if selected_type == 'duo' %}selected{% endif %}>Duo (2 personnes)</option>
-                    <option value="familiale" {% if selected_type == 'familiale' %}selected{% endif %}>Familiale (4 personnes)</option>
+                <label for="drone-type-filter" class="form-label">Filtrer par niveau :</label>
+                <select id="drone-type-filter" class="form-select">
+                    <option value="">Tous les niveaux</option>
+                    <option value="debutant" {% if selected_type == 'debutant' %}selected{% endif %}>Débutant</option>
+                    <option value="intermediaire" {% if selected_type == 'intermediaire' %}selected{% endif %}>Intermédiaire</option>
+                    <option value="expert" {% if selected_type == 'expert' %}selected{% endif %}>Expert</option>
                 </select>
             </div>
         </div>
         <div class="col-md-6 d-flex align-items-end">
             <div class="text-md-end w-100">
-                <p class="mb-0"><strong>{{ offers|length }}</strong> offre(s) trouvée(s)</p>
+                <p class="mb-0"><strong>{{ drones|length }}</strong> drone(s) trouvé(s)</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Liste des offres -->
+<!-- Liste des drones -->
 <div class="row">
-    {% if offers %}
-        {% for offer in offers %}
+    {% if drones %}
+        {% for drone in drones %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                {% if offer.image %}
-                <img src="/static/images/{{ offer.image }}" class="card-img-top" alt="{{ offer.titre }}">
+            <div class="card h-100 drone-card">
+                {% if drone.image %}
+                <img src="{{ url_for('static', filename='images/' + drone.image) }}" class="card-img-top" alt="{{ drone.titre }}">
                 {% else %}
-                <img src="/static/images/default-offer.jpg" class="card-img-top" alt="{{ offer.titre }}">
+                <img src="{{ url_for('static', filename='images/default-drone.jpg') }}" class="card-img-top" alt="{{ drone.titre }}">
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ offer.titre }}</h5>
-                    <p class="card-text">{{ offer.description|truncate(100) }}</p>
+                    <h5 class="card-title">{{ drone.titre }}</h5>
+                    <p class="card-text">{{ drone.description|truncate(100) }}</p>
                     
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
-                            <span class="badge bg-primary">{{ offer.type|capitalize }}</span>
-                            <span class="badge bg-secondary">{{ offer.nombre_personnes }} personne(s)</span>
+                            <span class="badge bg-primary">{{ drone.niveau|capitalize }}</span>
                         </div>
-                        <span class="fs-5 fw-bold">{{ offer.prix }} €</span>
+                        <span class="fs-5 fw-bold text-primary">{{ drone.prix }} €</span>
                     </div>
                     
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            Disponibilité : {{ offer.disponibilite }} billet(s)
-                        </small>
-                        <small class="text-muted">
-                            {{ offer.date_evenement.strftime('%d/%m/%Y') }}
-                        </small>
+                    <div class="drone-specs">
+                        <div class="spec-item">
+                            <i class="fas fa-battery-three-quarters text-primary"></i>
+                            <span>{{ drone.autonomie }} min</span>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fas fa-camera text-primary"></i>
+                            <span>{{ drone.camera }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fas fa-tachometer-alt text-primary"></i>
+                            <span>{{ drone.vitesse }} km/h</span>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer d-grid">
-                    <a href="{{ url_for('offers.detail', offer_id=offer.id) }}" class="btn btn-primary">Voir les détails</a>
+                    <a href="{{ url_for('offers.detail', offer_id=drone.id) }}" class="btn btn-primary">Voir les détails</a>
                 </div>
+                
+                {% if drone.stock <= 5 and drone.stock > 0 %}
+                <div class="stock-badge">
+                    <span class="badge bg-warning">Plus que {{ drone.stock }}</span>
+                </div>
+                {% elif drone.stock == 0 %}
+                <div class="stock-badge">
+                    <span class="badge bg-danger">Rupture de stock</span>
+                </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
     {% else %}
         <div class="col-12">
             <div class="alert alert-info">
-                Aucune offre disponible pour le moment.
+                Aucun drone disponible pour le moment avec les critères sélectionnés.
             </div>
         </div>
     {% endif %}
 </div>
+
+<!-- Pagination -->
+{% if drones|length > 12 %}
+<nav aria-label="Navigation des pages" class="mt-4">
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Précédent</a>
+        </li>
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Suivant</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+
+<!-- Guide d'achat -->
+<div class="card mt-5">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Guide d'achat de drones</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <h5><i class="fas fa-user-graduate text-primary me-2"></i>Choisir selon votre niveau</h5>
+                <p>Les drones <strong>débutants</strong> sont faciles à piloter et résistants aux chocs. Les modèles <strong>intermédiaires</strong> offrent plus de fonctionnalités et de performances. Les drones <strong>experts</strong> disposent de capacités avancées et d'une qualité d'image professionnelle.</p>
+            </div>
+            <div class="col-md-4 mb-3 mb-md-0">
+                <h5><i class="fas fa-camera text-primary me-2"></i>Qualité de la caméra</h5>
+                <p>De la simple caméra HD à la 4K stabilisée, nos drones offrent différentes options pour capturer vos aventures aériennes. Pensez à choisir une qualité adaptée à vos besoins de photographie ou de vidéo.</p>
+            </div>
+            <div class="col-md-4">
+                <h5><i class="fas fa-battery-full text-primary me-2"></i>Autonomie</h5>
+                <p>L'autonomie de vol varie de 20 à 35 minutes selon les modèles. Pour prolonger votre expérience, pensez à nos batteries supplémentaires disponibles en accessoires.</p>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <a href="{{ url_for('main.tutorials') }}" class="btn btn-outline-primary">
+                <i class="fas fa-book me-2"></i>Consulter notre guide complet
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filtrage des drones
+        const droneTypeFilter = document.getElementById('drone-type-filter');
+        
+        if (droneTypeFilter) {
+            droneTypeFilter.addEventListener('change', function() {
+                const selectedType = this.value;
+                
+                // Rediriger vers la même page avec le filtre en paramètre
+                window.location.href = "{{ url_for('offers.index') }}" + (selectedType ? "?type=" + selectedType : "");
+            });
+        }
+    });
+</script>
+
+<style>
+    /* Style pour les cartes de drones */
+    .drone-card {
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .drone-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .drone-card .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .drone-specs {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 0.85rem;
+    }
+    
+    .spec-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .stock-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+    }
+</style>
 {% endblock %}

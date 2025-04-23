@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+
+{% block title %}Zephir Drones - Tutoriels et guides{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-3">Tutoriels et guides</h1>
+            <p class="lead">Tout ce dont vous avez besoin pour maîtriser votre drone Zephir</p>
+        </div>
+    </div>
+
+    <!-- Navigation par onglets -->
+    <ul class="nav nav-pills mb-4 justify-content-center" id="tutorialsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="debutants-tab" data-bs-toggle="pill" data-bs-target="#debutants" type="button" role="tab" aria-controls="debutants" aria-selected="true">Débutants</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="intermediaires-tab" data-bs-toggle="pill" data-bs-target="#intermediaires" type="button" role="tab" aria-controls="intermediaires" aria-selected="false">Intermédiaires</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="experts-tab" data-bs-toggle="pill" data-bs-target="#experts" type="button" role="tab" aria-controls="experts" aria-selected="false">Experts</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="maintenance-tab" data-bs-toggle="pill" data-bs-target="#maintenance" type="button" role="tab" aria-controls="maintenance" aria-selected="false">Maintenance</button>
+        </li>
+    </ul>
+
+    <!-- Contenu des onglets -->
+    <div class="tab-content" id="tutorialsTabContent">
+        <!-- Tutoriels pour débutants -->
+        <div class="tab-pane fade show active" id="debutants" role="tabpanel" aria-labelledby="debutants-tab">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-debutant-1.jpg') }}" class="card-img-top" alt="Premier vol">
+                        <div class="card-body">
+                            <h5 class="card-title">Votre premier vol</h5>
+                            <p class="card-text">Apprenez les bases du pilotage et effectuez votre premier vol en toute sécurité avec votre drone Zephir.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">15 min</span>
+                                <span class="badge bg-primary">Débutant</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal1">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-debutant-2.jpg') }}" class="card-img-top" alt="Configuration">
+                        <div class="card-body">
+                            <h5 class="card-title">Configuration initiale</h5>
+                            <p class="card-text">Découvrez comment paramétrer votre drone et la télécommande avant votre premier décollage.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">10 min</span>
+                                <span class="badge bg-primary">Débutant</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal2">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-debutant-3.jpg') }}" class="card-img-top" alt="Sécurité">
+                        <div class="card-body">
+                            <h5 class="card-title">Règles de sécurité essentielles</h5>
+                            <p class="card-text">Les précautions et règles à connaître pour voler en toute légalité et sécurité avec votre drone.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">12 min</span>
+                                <span class="badge bg-primary">Débutant</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal3">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tutoriels pour intermédiaires -->
+        <div class="tab-pane fade" id="intermediaires" role="tabpanel" aria-labelledby="intermediaires-tab">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-inter-1.jpg') }}" class="card-img-top" alt="Photographie">
+                        <div class="card-body">
+                            <h5 class="card-title">Photographie aérienne</h5>
+                            <p class="card-text">Maîtrisez les techniques pour capturer des images impressionnantes depuis les airs.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">20 min</span>
+                                <span class="badge bg-warning">Intermédiaire</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal4">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-inter-2.jpg') }}" class="card-img-top" alt="Manœuvres">
+                        <div class="card-body">
+                            <h5 class="card-title">Manœuvres avancées</h5>
+                            <p class="card-text">Apprenez à exécuter des vols circulaires, des orbites et d'autres mouvements complexes.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">25 min</span>
+                                <span class="badge bg-warning">Intermédiaire</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal5">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-inter-3.jpg') }}" class="card-img-top" alt="Suivi automatique">
+                        <div class="card-body">
+                            <h5 class="card-title">Utilisation du suivi automatique</h5>
+                            <p class="card-text">Exploitez toutes les possibilités du mode de suivi intelligent de votre drone Zephir.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">18 min</span>
+                                <span class="badge bg-warning">Intermédiaire</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal6">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tutoriels pour experts -->
+        <div class="tab-pane fade" id="experts" role="tabpanel" aria-labelledby="experts-tab">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-expert-1.jpg') }}" class="card-img-top" alt="Cinématique">
+                        <div class="card-body">
+                            <h5 class="card-title">Cinématographie professionnelle</h5>
+                            <p class="card-text">Techniques pour réaliser des séquences dignes du cinéma avec votre drone Zephir Elite 4K.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">30 min</span>
+                                <span class="badge bg-danger">Expert</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal7">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-expert-2.jpg') }}" class="card-img-top" alt="Réglages avancés">
+                        <div class="card-body">
+                            <h5 class="card-title">Paramètres avancés de la caméra</h5>
+                            <p class="card-text">Maîtrisez les réglages manuels pour des prises de vue professionnelles quelles que soient les conditions.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">22 min</span>
+                                <span class="badge bg-danger">Expert</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal8">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-expert-3.jpg') }}" class="card-img-top" alt="Post-traitement">
+                        <div class="card-body">
+                            <h5 class="card-title">Post-traitement des vidéos</h5>
+                            <p class="card-text">Apprenez à éditer et améliorer vos séquences aériennes comme un professionnel.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">35 min</span>
+                                <span class="badge bg-danger">Expert</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal9">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tutoriels de maintenance -->
+        <div class="tab-pane fade" id="maintenance" role="tabpanel" aria-labelledby="maintenance-tab">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-maintenance-1.jpg') }}" class="card-img-top" alt="Entretien">
+                        <div class="card-body">
+                            <h5 class="card-title">Entretien de base</h5>
+                            <p class="card-text">Comment nettoyer et entretenir votre drone pour garantir sa longévité et ses performances.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">15 min</span>
+                                <span class="badge bg-success">Maintenance</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal10">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-maintenance-2.jpg') }}" class="card-img-top" alt="Hélices">
+                        <div class="card-body">
+                            <h5 class="card-title">Remplacement des hélices</h5>
+                            <p class="card-text">Guide étape par étape pour remplacer correctement les hélices de votre drone Zephir.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">8 min</span>
+                                <span class="badge bg-success">Maintenance</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal11">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 tutorial-card">
+                        <img src="{{ url_for('static', filename='images/tutorial-maintenance-3.jpg') }}" class="card-img-top" alt="Batterie">
+                        <div class="card-body">
+                            <h5 class="card-title">Optimisation de la batterie</h5>
+                            <p class="card-text">Conseils pour maximiser la durée de vie et les performances de vos batteries de drone.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <span class="badge bg-info me-2">12 min</span>
+                                <span class="badge bg-success">Maintenance</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-grid">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorialModal12">
+                                <i class="fas fa-play-circle me-2"></i>Regarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Documentation technique -->
+    <div class="card mt-5">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Documentation technique</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-file-pdf fa-2x text-danger me-3"></i>
+                        <div>
+                            <h5 class="mb-1">Zephir X100 - Manuel utilisateur</h5>
+                            <p class="mb-0 small">PDF - 8.5 MB</p>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary ms-auto">
+                            <i class="fas fa-download me-2"></i>Télécharger
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-file-pdf fa-2x text-danger me-3"></i>
+                        <div>
+                            <h5 class="mb-1">Zephir Pro 720 - Manuel utilisateur</h5>
+                            <p class="mb-0 small">PDF - 12.3 MB</p>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary ms-auto">
+                            <i class="fas fa-download me-2"></i>Télécharger
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-file-pdf fa-2x text-danger me-3"></i>
+                        <div>
+                            <h5 class="mb-1">Zephir Elite 4K - Manuel utilisateur</h5>
+                            <p class="mb-0 small">PDF - 15.7 MB</p>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary ms-auto">
+                            <i class="fas fa-download me-2"></i>Télécharger
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-file-pdf fa-2x text-danger me-3"></i>
+                        <div>
+                            <h5 class="mb-1">Guide des pièces détachées</h5>
+                            <p class="mb-0 small">PDF - 6.2 MB</p>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary ms-auto">
+                            <i class="fas fa-download me-2"></i>Télécharger
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ -->
+    <div class="card mt-5">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Questions fréquentes</h4>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading1">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="false" aria-controls="faqCollapse1">
+                            Quelle est l'autonomie moyenne de vos drones ?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse1" class="accordion-collapse collapse" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            L'autonomie varie selon les modèles : le Zephir X100 offre environ 20 minutes de vol, le Zephir Pro 720 environ 25 minutes, et le Zephir Elite 4K jusqu'à 35 minutes dans des conditions optimales. Pour prolonger votre temps de vol, nous recommandons d'acheter des batteries supplémentaires.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                            Mes hélices sont endommagées, comment les remplacer ?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Le remplacement des hélices est simple. Consultez notre tutoriel vidéo dans la section Maintenance. En résumé, éteignez le drone, dévissez l'hélice endommagée en tournant dans le sens antihoraire, et installez la nouvelle hélice en vissant dans le sens horaire. Assurez-vous de respecter le sens de rotation indiqué sur l'hélice (A ou B).
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                            Ai-je besoin d'un permis pour piloter un drone Zephir ?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            La réglementation dépend du pays et du poids du drone. En France, nos drones de moins de 250g (comme le Zephir X100) ne nécessitent pas d'enregistrement pour un usage récréatif. Pour les modèles plus lourds, un enregistrement sur le site de la DGAC est obligatoire. Dans tous les cas, nous recommandons de consulter la législation locale et de respecter les zones de vol autorisées.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                            Comment maximiser la qualité des photos et vidéos ?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Pour obtenir les meilleures images, volez par temps clair avec une bonne luminosité, évitez les conditions venteuses, utilisez les paramètres manuels de la caméra (pour les modèles qui le permettent), stabilisez vos mouvements, et préférez les heures dorées (lever et coucher du soleil) pour des résultats plus cinématographiques. Consultez nos tutoriels pour photographes dans la section Intermédiaires et Experts.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading5">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+                            Mon drone ne se connecte pas à la télécommande, que faire ?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faqHeading5" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Vérifiez d'abord que les deux appareils sont correctement chargés. Éteignez puis rallumez les deux appareils. Si le problème persiste, effectuez une procédure d'appairage : allumez d'abord la télécommande, puis le drone, et maintenez le bouton d'appairage de la télécommande pendant 3 secondes. Les voyants clignotants deviendront fixes lorsque la connexion est établie.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact support -->
+    <div class="card mt-5 mb-5">
+        <div class="card-body text-center py-5">
+            <h4 class="mb-3">Vous n'avez pas trouvé la réponse à votre question ?</h4>
+            <p class="mb-4">Notre équipe de support technique est disponible pour vous aider</p>
+            <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-headset me-2"></i>Contacter le support
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Exemple de modal pour un tutoriel (à répliquer pour chaque tutoriel) -->
+<div class="modal fade" id="tutorialModal1" tabindex="-1" aria-labelledby="tutorialModal1Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tutorialModal1Label">Votre premier vol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ratio ratio-16x9 mb-4">
+                    <!-- Ici, vous pouvez intégrer une vidéo YouTube ou autre -->
+                    <div class="d-flex align-items-center justify-content-center bg-light">
+                        <div class="text-center">
+                            <i class="fas fa-film fa-3x text-muted mb-3"></i>
+                            <h5>Vidéo tutorielle</h5>
+                            <p class="text-muted">La vidéo sera affichée ici dans l'application réelle.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <h5>Étapes du premier vol</h5>
+                <ol>
+                    <li>Vérifier que la batterie du drone et de la télécommande sont chargées</li>
+                    <li>Choisir un espace dégagé, sans obstacles et loin des personnes</li>
+                    <li>Allumer d'abord la télécommande, puis le drone</li>
+                    <li>Placer le drone sur une surface plane et stable</li>
+                    <li>Effectuer le calibrage des gyroscopes si nécessaire</li>
+                    <li>Utiliser la combinaison de manches pour démarrer les moteurs</li>
+                    <li>Pousser doucement le manche gauche vers le haut pour décoller</li>
+                    <li>Maintenir le drone à faible hauteur pour les premiers essais</li>
+                    <li>Pratiquer les mouvements simples (avant, arrière, gauche, droite)</li>
+                    <li>Pour atterrir, positionner le drone au-dessus d'une zone dégagée et baisser doucement le manche des gaz</li>
+                </ol>
+                
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Conseil: Gardez toujours le drone en vue et prenez votre temps. La maîtrise vient avec la pratique!
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-download me-2"></i>Télécharger le PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation des cartes
+        const cards = document.querySelectorAll('.tutorial-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+        
+        // Garder l'onglet actif après un rafraîchissement de page
+        const hash = window.location.hash;
+        if (hash) {
+            const tab = document.querySelector(`[data-bs-target="${hash}"]`);
+            if (tab) {
+                new bootstrap.Tab(tab).show();
+            }
+        }
+    });
+</script>
+
+<style>
+    .tutorial-card {
+        transition: all 0.3s ease;
+        opacity: 0.8;
+        transform: translateY(10px);
+    }
+    
+    .tutorial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    
+    .tutorial-card .card-img-top {
+        height: 180px;
+        object-fit: cover;
+    }
+    
+    .nav-pills .nav-link.active {
+        background-color: var(--primary);
+    }
+    
+    .nav-pills .nav-link {
+        color: var(--primary);
+    }
+</style>
+{% endblock %}

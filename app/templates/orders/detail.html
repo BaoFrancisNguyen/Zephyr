@@ -1,130 +1,454 @@
 {% extends "base.html" %}
 
-{% block title %}JO E-Tickets - Commande {{ order.reference }}{% endblock %}
+{% block title %}Zephir Drones - {{ drone.titre }}{% endblock %}
 
 {% block content %}
-<div class="mb-4">
-    <a href="{{ url_for('orders.index') }}" class="btn btn-outline-primary">
-        <i class="fas fa-arrow-left me-2"></i>Retour à mes commandes
-    </a>
-</div>
-
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">Détails de la commande</h4>
-    </div>
-    <div class="card-body">
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <h5>Informations générales</h5>
-                <p><strong>Référence :</strong> {{ order.reference }}</p>
-                <p><strong>Date :</strong> {{ order.date_commande.strftime('%d/%m/%Y à %H:%M') }}</p>
-                <p>
-                    <strong>Statut :</strong>
-                    <span class="badge {% if order.statut == 'payée' %}bg-success{% elif order.statut == 'en attente' %}bg-warning{% else %}bg-danger{% endif %}">
-                        {{ order.statut|capitalize }}
-                    </span>
-                </p>
-                {% if order.date_paiement %}
-                <p><strong>Date de paiement :</strong> {{ order.date_paiement.strftime('%d/%m/%Y à %H:%M') }}</p>
-                {% endif %}
-            </div>
-            <div class="col-md-6 text-md-end">
-                <h5>Client</h5>
-                <p><strong>Nom :</strong> {{ current_user.prenom }} {{ current_user.nom }}</p>
-                <p><strong>Email :</strong> {{ order.adresse_email }}</p>
+<div class="row">
+    <!-- Image du drone -->
+    <div class="col-md-5 mb-4">
+        <div class="card">
+            {% if drone.image %}
+            <img src="{{ url_for('static', filename='images/' + drone.image) }}" class="card-img-top img-fluid" alt="{{ drone.titre }}">
+            {% else %}
+            <img src="{{ url_for('static', filename='images/default-drone.jpg') }}" class="card-img-top img-fluid" alt="{{ drone.titre }}">
+            {% endif %}
+            <div class="card-body text-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-primary">{{ drone.type|capitalize }}</span>
+                    <span class="badge bg-secondary">{{ drone.niveau }} niveau</span>
+                </div>
             </div>
         </div>
-
-        <h5 class="border-bottom pb-2 mb-3">Articles commandés</h5>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Offre</th>
-                        <th>Type</th>
-                        <th>Quantité</th>
-                        <th>Prix unitaire</th>
-                        <th class="text-end">Sous-total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in order.items %}
-                    <tr>
-                        <td>{{ item.offer.titre }}</td>
-                        <td>{{ item.offer.type|capitalize }}</td>
-                        <td>{{ item.quantite }}</td>
-                        <td>{{ item.prix_unitaire }} €</td>
-                        <td class="text-end">{{ item.sous_total() }} €</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4" class="text-end"><strong>Total</strong></td>
-                        <td class="text-end"><strong>{{ order.total }} €</strong></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
     </div>
-    <div class="card-footer">
-        <div class="d-flex justify-content-between">
-            {% if order.statut == 'en attente' %}
-            <a href="{{ url_for('orders.payment', order_id=order.id) }}" class="btn btn-success">
-                <i class="fas fa-credit-card me-2"></i>Procéder au paiement
-            </a>
-            {% elif order.statut == 'payée' %}
+    
+    <!-- Détails du drone -->
+    <div class="col-md-7">
+        <h1 class="mb-3">{{ drone.titre }}</h1>
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                {% if order.tickets %}
-                <a href="{{ url_for('tickets.index') }}" class="btn btn-primary">
-                    <i class="fas fa-ticket-alt me-2"></i>Voir mes billets
-                </a>
+                <p class="mb-0 text-muted">
+                    <i class="fas fa-drone-alt me-2"></i>Référence: ZEP-{{ drone.id }}
+                </p>
+            </div>
+            <h3 class="text-primary mb-0">{{ drone.prix }} €</h3>
+        </div>
+        
+        <div class="mb-4">
+            <div class="alert {% if drone.stock > 10 %}alert-success{% elif drone.stock > 0 %}alert-warning{% else %}alert-danger{% endif %}">
+                {% if drone.stock > 10 %}
+                    <i class="fas fa-check-circle me-2"></i>{{ drone.stock }} en stock
+                {% elif drone.stock > 0 %}
+                    <i class="fas fa-exclamation-triangle me-2"></i>Plus que {{ drone.stock }} en stock !
+                {% else %}
+                    <i class="fas fa-times-circle me-2"></i>Produit épuisé
                 {% endif %}
             </div>
-            {% endif %}
-            
-            {% if order.statut != 'annulée' %}
-            <form method="POST" action="{{ url_for('orders.cancel', order_id=order.id) }}">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?');">
-                    <i class="fas fa-times me-2"></i>Annuler la commande
-                </button>
-            </form>
-            {% endif %}
         </div>
-    </div>
-</div>
-
-{% if order.statut == 'payée' and order.tickets %}
-<div class="card">
-    <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">Billets associés</h4>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            {% for ticket in order.tickets %}
-            <div class="col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Billet #{{ ticket.id }}</h5>
-                        <p class="card-text">{{ ticket.offer.titre }}</p>
-                        <p>
-                            <span class="badge {% if ticket.est_valide %}bg-success{% else %}bg-danger{% endif %}">
-                                {% if ticket.est_valide %}Valide{% else %}Utilisé{% endif %}
-                            </span>
-                        </p>
-                        <a href="{{ url_for('tickets.detail', ticket_id=ticket.id) }}" class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye me-2"></i>Voir le billet
-                        </a>
-                        <a href="{{ url_for('tickets.download', ticket_id=ticket.id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-download me-2"></i>Télécharger
-                        </a>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Description</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ drone.description }}</p>
+            </div>
+        </div>
+        
+        <!-- Spécifications techniques -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Spécifications techniques</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-battery-three-quarters text-primary me-2"></i> <strong>Autonomie:</strong> {{ drone.autonomie }} minutes</li>
+                            <li><i class="fas fa-weight text-primary me-2"></i> <strong>Poids:</strong> {{ drone.poids }} g</li>
+                            <li><i class="fas fa-ruler-combined text-primary me-2"></i> <strong>Dimensions:</strong> {{ drone.dimensions }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-camera text-primary me-2"></i> <strong>Caméra:</strong> {{ drone.camera }}</li>
+                            <li><i class="fas fa-wifi text-primary me-2"></i> <strong>Portée:</strong> {{ drone.portee }} m</li>
+                            <li><i class="fas fa-tachometer-alt text-primary me-2"></i> <strong>Vitesse max:</strong> {{ drone.vitesse }} km/h</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+        </div>
+        
+        {% if drone.stock > 0 %}
+        <form method="POST" action="{{ url_for('cart.add_to_cart', drone_id=drone.id) }}">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Ajouter au panier</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantité</label>
+                        <div class="input-group">
+                            <button type="button" class="btn btn-outline-secondary btn-decrement">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" id="quantity" name="quantity" class="form-control text-center" value="1" min="1" max="{{ drone.stock }}">
+                            <button type="button" class="btn btn-outline-secondary btn-increment">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-cart-plus me-2"></i>Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% else %}
+        <div class="alert alert-danger">
+            <i class="fas fa-times-circle me-2"></i>Ce produit est actuellement en rupture de stock.
+        </div>
+        <div class="d-grid">
+            <button type="button" class="btn btn-outline-primary">
+                <i class="fas fa-bell me-2"></i>M'alerter quand ce produit est disponible
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Caractéristiques détaillées -->
+<div class="card mt-5">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Caractéristiques détaillées</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Équipement</h6>
+                <ul>
+                    {% for feature in drone.features %}
+                    <li>{{ feature }}</li>
+                    {% endfor %}
+                    <li>Caméra {{ drone.camera }}</li>
+                    <li>Stabilisation automatique</li>
+                    <li>Télécommande ergonomique</li>
+                    <li>Batterie {{ drone.autonomie }} minutes</li>
+                    <li>Retour automatique en cas de batterie faible</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6>Contenu du pack</h6>
+                <ul>
+                    <li>1 × Drone {{ drone.titre }}</li>
+                    <li>1 × Télécommande</li>
+                    <li>1 × Batterie</li>
+                    <li>1 × Chargeur</li>
+                    <li>4 × Hélices de rechange</li>
+                    <li>1 × Câble USB</li>
+                    <li>1 × Manuel d'utilisation</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
-{% endif %}
+
+<!-- Accessoires recommandés -->
+<div class="mt-5">
+    <h3 class="mb-4 border-bottom pb-2">Accessoires recommandés</h3>
+    
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/accessory1.jpg') }}" class="card-img-top" alt="Batterie supplémentaire">
+                <div class="card-body">
+                    <h5 class="card-title">Batterie supplémentaire</h5>
+                    <p class="card-text small">Prolongez votre temps de vol avec cette batterie supplémentaire.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">29,99 €</span>
+                        <a href="{{ url_for('cart.add_to_cart', accessory_id=1) }}" class="btn btn-outline-primary btn-sm">Ajouter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/accessory2.jpg') }}" class="card-img-top" alt="Sac de transport">
+                <div class="card-body">
+                    <h5 class="card-title">Sac de transport</h5>
+                    <p class="card-text small">Protégez votre drone avec ce sac de transport résistant.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">24,99 €</span>
+                        <a href="{{ url_for('cart.add_to_cart', accessory_id=2) }}" class="btn btn-outline-primary btn-sm">Ajouter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/accessory3.jpg') }}" class="card-img-top" alt="Hélices de rechange">
+                <div class="card-body">
+                    <h5 class="card-title">Hélices de rechange</h5>
+                    <p class="card-text small">Ensemble de 8 hélices compatibles avec votre drone.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">14,99 €</span>
+                        <a href="{{ url_for('cart.add_to_cart', accessory_id=3) }}" class="btn btn-outline-primary btn-sm">Ajouter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/accessory4.jpg') }}" class="card-img-top" alt="Chargeur rapide">
+                <div class="card-body">
+                    <h5 class="card-title">Chargeur rapide</h5>
+                    <p class="card-text small">Rechargez votre batterie en moitié moins de temps.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">19,99 €</span>
+                        <a href="{{ url_for('cart.add_to_cart', accessory_id=4) }}" class="btn btn-outline-primary btn-sm">Ajouter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Avis clients -->
+<div class="card mt-5 mb-5">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Avis clients</h5>
+        <span class="badge bg-light text-dark">4.7/5 <i class="fas fa-star text-warning"></i></span>
+    </div>
+    <div class="card-body">
+        <!-- Avis 1 -->
+        <div class="mb-4 pb-4 border-bottom">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <img src="{{ url_for('static', filename='images/avatar1.jpg') }}" alt="Thomas L." class="rounded-circle me-2" width="40" height="40">
+                    <span class="fw-bold">Thomas L.</span>
+                </div>
+                <div class="text-warning">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+            <p class="mb-1">Excellent drone pour débuter. Stable, facile à piloter et autonomie correcte. Je recommande!</p>
+            <small class="text-muted">Posté le 12/04/2025</small>
+        </div>
+        
+        <!-- Avis 2 -->
+        <div class="mb-4 pb-4 border-bottom">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <img src="{{ url_for('static', filename='images/avatar2.jpg') }}" alt="Sophie M." class="rounded-circle me-2" width="40" height="40">
+                    <span class="fw-bold">Sophie M.</span>
+                </div>
+                <div class="text-warning">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+            <p class="mb-1">Parfait pour des vidéos aériennes de qualité à prix abordable. La qualité de fabrication est au rendez-vous. Je retire une demi-étoile car la batterie se décharge un peu rapidement.</p>
+            <small class="text-muted">Posté le 28/03/2025</small>
+        </div>
+        
+        <!-- Avis 3 -->
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <img src="{{ url_for('static', filename='images/avatar3.jpg') }}" alt="Antoine R." class="rounded-circle me-2" width="40" height="40">
+                    <span class="fw-bold">Antoine R.</span>
+                </div>
+                <div class="text-warning">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+            <p class="mb-1">J'ai reçu mon drone très rapidement et en parfait état. Il est encore plus performant que je ne l'espérais. Le service client a été très réactif quand j'ai eu une question.</p>
+            <small class="text-muted">Posté le 15/03/2025</small>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+            <i class="fas fa-pencil-alt me-2"></i>Laisser un avis
+        </button>
+    </div>
+</div>
+
+<!-- Modal d'avis -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">Donner votre avis sur {{ drone.titre }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Votre note</label>
+                        <div class="rating">
+                            <i class="far fa-star fa-2x" data-rating="1"></i>
+                            <i class="far fa-star fa-2x" data-rating="2"></i>
+                            <i class="far fa-star fa-2x" data-rating="3"></i>
+                            <i class="far fa-star fa-2x" data-rating="4"></i>
+                            <i class="far fa-star fa-2x" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" name="rating" id="rating-value" value="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="review-text" class="form-label">Votre commentaire</label>
+                        <textarea class="form-control" id="review-text" rows="4" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary">Soumettre</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion des quantités
+        const decrementBtn = document.querySelector('.btn-decrement');
+        const incrementBtn = document.querySelector('.btn-increment');
+        const quantityInput = document.getElementById('quantity');
+        
+        if (decrementBtn && incrementBtn && quantityInput) {
+            decrementBtn.addEventListener('click', function() {
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+            
+            incrementBtn.addEventListener('click', function() {
+                const currentValue = parseInt(quantityInput.value);
+                const maxValue = parseInt(quantityInput.getAttribute('max'));
+                if (currentValue < maxValue) {
+                    quantityInput.value = currentValue + 1;
+                }
+            });
+        }
+        
+        // Système de notation
+        const stars = document.querySelectorAll('.rating .fa-star');
+        const ratingInput = document.getElementById('rating-value');
+        
+        stars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                
+                // Remplir les étoiles jusqu'à celle survolée
+                stars.forEach(s => {
+                    const starRating = parseInt(s.getAttribute('data-rating'));
+                    s.classList.remove('fas', 'far');
+                    s.classList.add(starRating <= rating ? 'fas' : 'far');
+                });
+            });
+            
+            star.addEventListener('mouseout', function() {
+                const currentRating = parseInt(ratingInput.value);
+                
+                // Rétablir l'affichage en fonction de la note actuelle
+                stars.forEach(s => {
+                    const starRating = parseInt(s.getAttribute('data-rating'));
+                    s.classList.remove('fas', 'far');
+                    s.classList.add(starRating <= currentRating ? 'fas' : 'far');
+                });
+            });
+            
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                ratingInput.value = rating;
+                
+                // Mettre à jour l'affichage
+                stars.forEach(s => {
+                    const starRating = parseInt(s.getAttribute('data-rating'));
+                    s.classList.remove('fas', 'far');
+                    s.classList.add(starRating <= rating ? 'fas' : 'far');
+                });
+            });
+        });
+    });
+</script>
+
+<style>
+    /* Style pour le système de notation */
+    .rating {
+        color: #ffc107;
+        cursor: pointer;
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .rating i:hover {
+        transform: scale(1.1);
+    }
+    
+    /* Style pour les images du drone */
+    .drone-gallery {
+        margin-bottom: 1rem;
+    }
+    
+    .drone-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+    }
+    
+    .drone-thumbnail:hover {
+        border-color: var(--primary);
+    }
+    
+    .drone-thumbnail.active {
+        border-color: var(--primary);
+    }
+    
+    /* Animation pour la notification d'ajout au panier */
+    @keyframes fadeInOut {
+        0% { opacity: 0; transform: translateY(20px); }
+        10% { opacity: 1; transform: translateY(0); }
+        90% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-20px); }
+    }
+    
+    .cart-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--primary);
+        color: white;
+        padding: 1rem;
+        border-radius: 5px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        z-index: 1000;
+        animation: fadeInOut 3s forwards;
+        display: none;
+    }
+</style>
+
 {% endblock %}

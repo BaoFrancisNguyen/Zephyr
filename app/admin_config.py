@@ -3,8 +3,8 @@ from flask_login import current_user
 from flask import redirect, url_for, flash, request
 from app import bcrypt
 from app.models.user import User
-from wtforms import PasswordField, StringField, BooleanField, SelectField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms import PasswordField, StringField, BooleanField, SelectField, IntegerField, FloatField
+from wtforms.validators import DataRequired, Email, Length, NumberRange
 
 class AdminBaseView(ModelView):
     def is_accessible(self):
@@ -76,11 +76,70 @@ class UserAdminView(AdminBaseView):
             model.cle_securite = model._generate_security_key()
 
 class OfferAdminView(AdminBaseView):
-    # Configurer les colonnes et les options pour les offres
-    column_list = ('id', 'titre', 'type', 'prix', 'disponibilite', 'date_evenement', 'est_publie')
-    column_sortable_list = ('id', 'titre', 'type', 'prix', 'disponibilite', 'date_evenement')
-    column_filters = ('type', 'est_publie')
+    # Configurer les colonnes et les options pour les drones
+    column_list = ('id', 'titre', 'type', 'niveau', 'prix', 'stock', 'est_publie')
+    column_sortable_list = ('id', 'titre', 'type', 'niveau', 'prix', 'stock')
+    column_filters = ('type', 'niveau', 'est_publie')
     column_searchable_list = ('titre', 'description')
+    
+    # Personnaliser les noms des colonnes pour l'interface admin
+    column_labels = {
+        'titre': 'Modèle',
+        'type': 'Type',
+        'niveau': 'Niveau',
+        'prix': 'Prix (€)',
+        'stock': 'Stock',
+        'est_publie': 'Publié',
+        'autonomie': 'Autonomie (min)',
+        'poids': 'Poids (g)',
+        'dimensions': 'Dimensions',
+        'camera': 'Caméra',
+        'portee': 'Portée (m)',
+        'vitesse': 'Vitesse max (km/h)'
+    }
+    
+    # Définir les champs du formulaire
+    form_columns = (
+        'titre', 'description', 'type', 'niveau', 'prix', 'stock', 
+        'autonomie', 'poids', 'dimensions', 'camera', 'portee', 'vitesse',
+        'image', 'est_publie'
+    )
+    
+    # Champs supplémentaires et validateurs
+    form_args = {
+        'type': {
+            'choices': [
+                ('debutant', 'Débutant'),
+                ('intermediaire', 'Intermédiaire'),
+                ('expert', 'Expert')
+            ]
+        },
+        'niveau': {
+            'choices': [
+                ('debutant', 'Débutant'),
+                ('intermediaire', 'Intermédiaire'),
+                ('expert', 'Expert')
+            ]
+        },
+        'prix': {
+            'validators': [DataRequired(), NumberRange(min=0)]
+        },
+        'stock': {
+            'validators': [DataRequired(), NumberRange(min=0)]
+        },
+        'autonomie': {
+            'validators': [NumberRange(min=0)]
+        },
+        'poids': {
+            'validators': [NumberRange(min=0)]
+        },
+        'portee': {
+            'validators': [NumberRange(min=0)]
+        },
+        'vitesse': {
+            'validators': [NumberRange(min=0)]
+        }
+    }
     
     # Désactiver les modaux pour éviter les problèmes
     create_modal = False
@@ -88,10 +147,10 @@ class OfferAdminView(AdminBaseView):
 
 class OrderAdminView(AdminBaseView):
     # Configurer les colonnes et les options pour les commandes
-    column_list = ('id', 'reference', 'user.username', 'total', 'statut', 'date_commande')
+    column_list = ('id', 'reference', 'user.username', 'total', 'statut', 'date_commande', 'date_expedition', 'date_livraison')
     column_sortable_list = ('id', 'reference', 'total', 'date_commande')
     column_filters = ('statut',)
-    column_searchable_list = ('reference',)
+    column_searchable_list = ('reference', 'adresse_livraison')
     
     # Les commandes ne peuvent pas être créées manuellement
     can_create = False
@@ -100,13 +159,25 @@ class OrderAdminView(AdminBaseView):
     create_modal = False
     edit_modal = False
 
-class TicketAdminView(AdminBaseView):
-    # Configurer les colonnes et les options pour les billets
-    column_list = ('id', 'order.reference', 'offer.titre', 'est_valide', 'date_generation')
-    column_sortable_list = ('id', 'date_generation')
-    column_filters = ('est_valide',)
+class OrderItemAdminView(AdminBaseView):
+    def titre_formatter(view, context, model, name):
+        """Formatter pour afficher le titre de l'offre."""
+        return model.offer.titre if model.offer else ""
     
-    # Les billets ne peuvent pas être créés manuellement
+    def reference_formatter(view, context, model, name):
+        """Formatter pour afficher la référence de la commande."""
+        return model.order.reference if model.order else ""
+    
+    column_formatters = {
+        'titre': titre_formatter,
+        'reference': reference_formatter
+    }
+    
+    column_list = ('id', 'reference', 'titre', 'quantite', 'prix_unitaire')
+    column_sortable_list = ('id', 'quantite', 'prix_unitaire')
+    column_filters = ('order_id', 'offer_id')
+    
+    # Les items de commande ne peuvent pas être créés manuellement
     can_create = False
     
     # Désactiver les modaux pour éviter les problèmes
@@ -118,12 +189,11 @@ def init_admin(admin):
     # Importer les modèles
     from app.models.user import User
     from app.models.offer import Offer
-    from app.models.order import Order
-    from app.models.ticket import Ticket
+    from app.models.order import Order, OrderItem
     from app import db
     
     # Ajouter les vues à l'admin
     admin.add_view(UserAdminView(User, db.session, name="Utilisateurs"))
-    admin.add_view(OfferAdminView(Offer, db.session, name="Offres"))
+    admin.add_view(OfferAdminView(Offer, db.session, name="Drones"))
     admin.add_view(OrderAdminView(Order, db.session, name="Commandes"))
-    admin.add_view(TicketAdminView(Ticket, db.session, name="Billets"))
+    admin.add_view(OrderItemAdminView(OrderItem, db.session, name="Détails commandes"))
