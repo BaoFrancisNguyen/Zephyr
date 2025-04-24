@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+
+{% block title %}Zephir Drones - Foire aux questions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- En-tête de la page -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Foire aux questions</h1>
+            <p class="lead text-muted">Trouvez des réponses à vos questions sur nos drones et nos services.</p>
+        </div>
+    </div>
+    
+    <!-- Catégories de FAQ -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <ul class="nav nav-pills nav-fill" id="faqTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="general-tab" data-bs-toggle="pill" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
+                                <i class="fas fa-info-circle me-2"></i>Général
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="products-tab" data-bs-toggle="pill" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="false">
+                                <i class="fas fa-drone-alt me-2"></i>Produits
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="orders-tab" data-bs-toggle="pill" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="false">
+                                <i class="fas fa-shopping-cart me-2"></i>Commandes et livraison
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="technical-tab" data-bs-toggle="pill" data-bs-target="#technical" type="button" role="tab" aria-controls="technical" aria-selected="false">
+                                <i class="fas fa-tools me-2"></i>Support technique
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contenu des FAQ -->
+    <div class="tab-content" id="faqTabContent">
+        <!-- Général -->
+        <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="accordion" id="accordionGeneral">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="generalHeading1">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#generalCollapse1" aria-expanded="true" aria-controls="generalCollapse1">
+                                    Qui est Zephir Drones ?
+                                </button>
+                            </h2>
+                            <div id="generalCollapse1" class="accordion-collapse collapse show" aria-labelledby="generalHeading1" data-bs-parent="#accordionGeneral">
+                                <div class="accordion-body">
+                                    <p>Zephir Drones est une entreprise française fondée en 2018, spécialisée dans la conception et la vente de drones de haute qualité à prix accessible. Nous proposons des drones adaptés à tous les niveaux, des débutants aux experts.</p>
+                                    <p>Chaque drone Zephir est assemblé dans nos ateliers français, où nos techniciens veillent à la qualité de chaque composant et garantissent des performances optimales.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="generalHeading2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#generalCollapse2" aria-expanded="false" aria-controls="generalCollapse2">
+                                    Faut-il un permis pour piloter vos drones ?
+                                </button>
+                            </h2>
+                            <div id="generalCollapse2" class="accordion-collapse collapse" aria-labelledby="generalHeading2" data-bs-parent="#accordionGeneral">
+                                <div class="accordion-body">
+                                    <p>En France, la réglementation dépend du poids et de l'utilisation de votre drone :</p>
+                                    <ul>
+                                        <li>Pour nos drones de moins de 250g (comme le Zephir X100), aucun enregistrement n'est nécessaire pour un usage récréatif.</li>
+                                        <li>Pour les modèles plus lourds, une déclaration sur le site de la DGAC est obligatoire.</li>
+                                        <li>Pour toute utilisation professionnelle, une formation et des certifications spécifiques sont requises.</li>
+                                    </ul>
+                                    <p>Nous vous recommandons de consulter la <a href="https://www.ecologie.gouv.fr/drones-usages-professionnels" target="_blank">législation en vigueur</a> qui évolue régulièrement.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="generalHeading3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#generalCollapse3" aria-expanded="false" aria-controls="generalCollapse3">
+                                    Comment contacter votre service client ?
+                                </button>
+                            </h2>
+                            <div id="generalCollapse3" class="accordion-collapse collapse" aria-labelledby="generalHeading3" data-bs-parent="#accordionGeneral">
+                                <div class="accordion-body">
+                                    <p>Notre équipe de support client est disponible du lundi au samedi de 9h à 18h :</p>
+                                    <ul>
+                                        <li>Par téléphone : 01 23 45 67 89</li>
+                                        <li>Par email : support@zephir-drones.fr</li>
+                                        <li>Via le <a href="{{ url_for('main.contact') }}">formulaire de contact</a> de notre site</li>
+                                    </ul>
+                                    <p>Nous nous engageons à répondre à toutes les demandes dans un délai de 24h ouvrées.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Produits -->
+        <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="products-tab">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="accordion" id="accordionProducts">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="productsHeading1">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#productsCollapse1" aria-expanded="true" aria-controls="productsCollapse1">
+                                    Quelle est l'autonomie de vos drones ?
+                                </button>
+                            </h2>
+                            <div id="productsCollapse1" class="accordion-collapse collapse show" aria-labelledby="productsHeading1" data-bs-parent="#accordionProducts">
+                                <div class="accordion-body">
+                                    <p>L'autonomie varie selon nos modèles :</p>
+                                    <ul>
+                                        <li>Zephir X100 : environ 20 minutes</li>
+                                        <li>Zephir Pro 720 : environ 25 minutes</li>
+                                        <li>Zephir Elite 4K : jusqu'à 35 minutes</li>
+                                    </ul>
+                                    <p>Ces valeurs sont données dans des conditions optimales (absence de vent, température modérée). Pour prolonger votre temps de vol, nous recommandons l'achat de batteries supplémentaires.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="productsHeading2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#productsCollapse2" aria-expanded="false" aria-controls="productsCollapse2">
+                                    Quelle est la différence entre vos modèles de drones ?
+                                </button>
+                            </h2>
+                            <div id="productsCollapse2" class="accordion-collapse collapse" aria-labelledby="productsHeading2" data-bs-parent="#accordionProducts">
+                                <div class="accordion-body">
+                                    <p><strong>Zephir X100 (89,99€) - Niveau débutant</strong></p>
+                                    <ul>
+                                        <li>Idéal pour l'apprentissage</li>
+                                        <li>Facile à piloter avec stabilisation automatique</li>
+                                        <li>Autonomie de 20 minutes</li>
+                                        <li>Sans caméra</li>
+                                    </ul>
+                                    
+                                    <p><strong>Zephir Pro 720 (119,99€) - Niveau intermédiaire</strong></p>
+                                    <ul>
+                                        <li>Caméra HD 720p intégrée</li>
+                                        <li>Stabilisation gyroscopique avancée</li>
+                                        <li>Autonomie de 25 minutes</li>
+                                        <li>Fonctions automatiques (retour au point de départ, maintien d'altitude)</li>
+                                    </ul>
+                                    
+                                    <p><strong>Zephir Elite 4K (139,99€) - Niveau expert</strong></p>
+                                    <ul>
+                                        <li>Caméra 4K avec stabilisation électronique</li>
+                                        <li>Suivi automatique de sujet</li>
+                                        <li>Autonomie de 35 minutes</li>
+                                        <li>Portée étendue (jusqu'à 1,5 km)</li>
+                                        <li>Modes de vol avancés (orbite, waypoints, etc.)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="productsHeading3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#productsCollapse3" aria-expanded="false" aria-controls="productsCollapse3">
+                                    Quels accessoires recommandez-vous ?
+                                </button>
+                            </h2>
+                            <div id="productsCollapse3" class="accordion-collapse collapse" aria-labelledby="productsHeading3" data-bs-parent="#accordionProducts">
+                                <div class="accordion-body">
+                                    <p>Pour optimiser votre expérience de vol, nous recommandons les accessoires suivants :</p>
+                                    <ul>
+                                        <li><strong>Batteries supplémentaires</strong> (29,99€) : Pour prolonger votre temps de vol</li>
+                                        <li><strong>Sac de transport</strong> (24,99€) : Protection optimale pour votre drone et ses accessoires</li>
+                                        <li><strong>Kit d'hélices de rechange</strong> (14,99€) : Set de 8 hélices compatibles avec tous nos modèles</li>
+                                        <li><strong>Chargeur rapide</strong> (19,99€) : Réduit de moitié le temps de charge de vos batteries</li>
+                                        <li><strong>Filtres ND</strong> (34,99€) : Pour les modèles avec caméra, améliorent la qualité des vidéos par temps ensoleillé</li>
+                                    </ul>
+                                    <p>Tous nos accessoires sont disponibles dans la <a href="{{ url_for('offers.index') }}">boutique en ligne</a>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Commandes et livraison -->
+        <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="accordion" id="accordionOrders">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="ordersHeading1">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#ordersCollapse1" aria-expanded="true" aria-controls="ordersCollapse1">
+                                    Quels sont les délais et frais de livraison ?
+                                </button>
+                            </h2>
+                            <div id="ordersCollapse1" class="accordion-collapse collapse show" aria-labelledby="ordersHeading1" data-bs-parent="#accordionOrders">
+                                <div class="accordion-body">
+                                    <p>Nos délais de livraison standards sont:</p>
+                                    <ul>
+                                        <li>France métropolitaine : 2-3 jours ouvrés</li>
+                                        <li>Union Européenne : 3-5 jours ouvrés</li>
+                                        <li>Reste du monde : 5-10 jours ouvrés</li>
+                                    </ul>
+                                    <p>Les frais de livraison s'élèvent à 5,99€ pour toute commande inférieure à 100€. La livraison est gratuite pour toute commande supérieure à 100€.</p>
+                                    <p>Une option de livraison express (24h) est disponible pour 12,99€ supplémentaires.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="ordersHeading2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ordersCollapse2" aria-expanded="false" aria-controls="ordersCollapse2">
+                                    Quels sont les moyens de paiement acceptés ?
+                                </button>
+                            </h2>
+                            <div id="ordersCollapse2" class="accordion-collapse collapse" aria-labelledby="ordersHeading2" data-bs-parent="#accordionOrders">
+                                <div class="accordion-body">
+                                    <p>Nous acceptons les moyens de paiement suivants:</p>
+                                    <ul>
+                                        <li>Cartes bancaires (Visa, Mastercard, American Express)</li>
+                                        <li>PayPal</li>
+                                        <li>Virement bancaire</li>
+                                        <li>Paiement en 3 ou 4 fois sans frais (pour les commandes supérieures à 100€)</li>
+                                    </ul>
+                                    <p>Tous nos paiements sont sécurisés et vos informations bancaires ne sont jamais stockées sur nos serveurs.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="ordersHeading3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ordersCollapse3" aria-expanded="false" aria-controls="ordersCollapse3">
+                                    Quelle est votre politique de retour ?
+                                </button>
+                            </h2>
+                            <div id="ordersCollapse3" class="accordion-collapse collapse" aria-labelledby="ordersHeading3" data-bs-parent="#accordionOrders">
+                                <div class="accordion-body">
+                                    <p>Conformément à la législation européenne, vous disposez d'un droit de rétractation de 14 jours à compter de la réception de votre commande, sans avoir à justifier de motifs ni à payer de pénalités.</p>
+                                    <p>Pour exercer ce droit :</p>
+                                    <ol>
+                                        <li>Contactez notre service client pour annoncer votre retour</li>
+                                        <li>Emballez soigneusement le produit dans son emballage d'origine</li>
+                                        <li>Joignez le formulaire de retour disponible dans votre espace client</li>
+                                        <li>Expédiez le colis à l'adresse indiquée</li>
+                                    </ol>
+                                    <p>Le remboursement sera effectué sous 14 jours maximum après réception du produit retourné. Les frais de retour sont à votre charge, sauf en cas de produit défectueux.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Support technique -->
+        <div class="tab-pane fade" id="technical" role="tabpanel" aria-labelledby="technical-tab">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="accordion" id="accordionTechnical">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="technicalHeading1">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#technicalCollapse1" aria-expanded="true" aria-controls="technicalCollapse1">
+                                    Que faire si mon drone ne s'allume pas ?
+                                </button>
+                            </h2>
+                            <div id="technicalCollapse1" class="accordion-collapse collapse show" aria-labelledby="technicalHeading1" data-bs-parent="#accordionTechnical">
+                                <div class="accordion-body">
+                                    <p>Si votre drone ne s'allume pas, suivez ces étapes de dépannage :</p>
+                                    <ol>
+                                        <li>Vérifiez que la batterie est correctement insérée et chargée</li>
+                                        <li>Essayez de recharger complètement la batterie</li>
+                                        <li>Vérifiez que le bouton d'alimentation fonctionne correctement</li>
+                                        <li>Essayez avec une autre batterie si vous en possédez une</li>
+                                        <li>Recherchez d'éventuels dommages physiques (chocs, infiltration d'eau)</li>
+                                    </ol>
+                                    <p>Si le problème persiste, contactez notre support technique avec votre numéro de série et une description détaillée du problème.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="technicalHeading2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#technicalCollapse2" aria-expanded="false" aria-controls="technicalCollapse2">
+                                    Comment calibrer mon drone ?
+                                </button>
+                            </h2>
+                            <div id="technicalCollapse2" class="accordion-collapse collapse" aria-labelledby="technicalHeading2" data-bs-parent="#accordionTechnical">
+                                <div class="accordion-body">
+                                    <p>La calibration est importante pour assurer la stabilité et la précision de votre drone. Voici la procédure standard pour tous nos modèles :</p>
+                                    <ol>
+                                        <li>Placez le drone sur une surface plane et horizontale</li>
+                                        <li>Allumez la télécommande puis le drone</li>
+                                        <li>Pour calibrer le gyroscope : poussez les deux joysticks vers le bas et vers l'intérieur pendant 3 secondes jusqu'à ce que les LEDs clignotent</li>
+                                        <li>Pour calibrer la boussole (modèles Pro et Elite) : poussez le joystick gauche vers le bas-droit et le joystick droit vers le haut-gauche jusqu'à ce que les LEDs changent de couleur</li>
+                                        <li>Tournez le drone horizontalement à 360° dans le sens horaire jusqu'à ce que les LEDs clignotent</li>
+                                        <li>Pointez le nez du drone vers le bas et tournez-le à 360° jusqu'à ce que la calibration soit confirmée</li>
+                                    </ol>
+                                    <p>Pour des instructions plus détaillées, consultez le manuel d'utilisation spécifique à votre modèle ou notre <a href="{{ url_for('main.tutorials') }}">section tutoriels</a>.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="technicalHeading3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#technicalCollapse3" aria-expanded="false" aria-controls="technicalCollapse3">
+                                    Comment mettre à jour le firmware de mon drone ?
+                                </button>
+                            </h2>
+                            <div id="technicalCollapse3" class="accordion-collapse collapse" aria-labelledby="technicalHeading3" data-bs-parent="#accordionTechnical">
+                                <div class="accordion-body">
+                                    <p>Pour mettre à jour le firmware de votre drone Zephir :</p>
+                                    <ol>
+                                        <li>Téléchargez l'application Zephir Pilot sur votre smartphone (disponible sur iOS et Android)</li>
+                                        <li>Créez un compte ou connectez-vous à votre compte existant</li>
+                                        <li>Assurez-vous que la batterie de votre drone est chargée à au moins 50%</li>
+                                        <li>Connectez votre smartphone au Wi-Fi du drone</li>
+                                        <li>Ouvrez l'application et rendez-vous dans "Paramètres" > "Informations sur l'appareil"</li>
+                                        <li>Si une mise à jour est disponible, un bouton "Mettre à jour" apparaîtra</li>
+                                        <li>Suivez les instructions à l'écran et ne déconnectez pas votre appareil pendant la mise à jour</li>
+                                    </ol>
+                                    <p>Les mises à jour du firmware peuvent ajouter de nouvelles fonctionnalités, améliorer les performances et corriger des bugs. Nous recommandons de toujours utiliser la dernière version disponible.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section de contact -->
+    <div class="card bg-light border-0 shadow-sm mt-5">
+        <div class="card-body p-5 text-center">
+            <h3 class="mb-4">Vous n'avez pas trouvé de réponse à votre question ?</h3>
+            <p class="lead mb-4">Notre équipe de support technique est disponible pour vous aider</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="tel:0123456789" class="btn btn-primary btn-lg">
+                    <i class="fas fa-phone-alt me-2"></i>Nous appeler
+                </a>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Nous écrire
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion des onglets et des liens d'ancrage dans l'URL
+        const urlHash = window.location.hash;
+        if (urlHash) {
+            const tab = document.querySelector(`button[data-bs-target="${urlHash}"]`);
+            if (tab) {
+                const bsTab = new bootstrap.Tab(tab);
+                bsTab.show();
+            }
+        }
+        
+        // Mettre à jour l'URL lorsqu'un onglet est cliqué
+        const tabButtons = document.querySelectorAll('button[data-bs-toggle="pill"]');
+        tabButtons.forEach(button => {
+            button.addEventListener('shown.bs.tab', event => {
+                const targetId = event.target.getAttribute('data-bs-target');
+                history.replaceState(null, null, targetId);
+            });
+        });
+    });
+</script>
+{% endblock %}

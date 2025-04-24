@@ -1,3 +1,4 @@
+```html
 {% extends "base.html" %}
 
 {% block title %}Zephir Drones - À propos{% endblock %}
@@ -101,59 +102,59 @@
             <p class="lead text-muted">Les passionnés qui font vivre Zephir Drones</p>
         </div>
         
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='images/mounia.jpg') }}" class="card-img-top" alt="CEO">
-                <div class="card-body text-center">
-                    <h4 class="card-title">Mounia Bessam</h4>
-                    <p class="text-muted">Fondateur & PDG</p>
-                    <p class="card-text">Ingénieur en aérospatiale et pilote de drone certifié, Mounia a fondé Zephir Drones après 10 ans dans l'industrie aéronautique.</p>
+        <div class="row">
+            <div class="col-md-2-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='images/mounia.jpg') }}" class="card-img-top" alt="CEO">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Mounia Bessam</h5>
+                        <p class="text-muted small">Fondateur & PDG</p>
+                        <p class="card-text small">Ingénieur en aérospatiale et pilote de drone certifié.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='images/abou.jpg') }}" class="card-img-top" alt="CTO">
-                <div class="card-body text-center">
-                    <h4 class="card-title">Aboubacrine Seck</h4>
-                    <p class="text-muted">Directrice Technique</p>
-                    <p class="card-text">Spécialiste en électronique et systèmes embarqués, Aboubacrine supervise le développement technique de tous nos drones.</p>
+            
+            <div class="col-md-2-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='images/abou.jpg') }}" class="card-img-top" alt="CTO">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Aboubacrine Seck</h5>
+                        <p class="text-muted small">Directeur Technique</p>
+                        <p class="card-text small">Spécialiste en électronique et systèmes embarqués.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='images/akram.jpg') }}" class="card-img-top" alt="CMO">
-                <div class="card-body text-center">
-                    <h4 class="card-title">Akram Zaraba</h4>
-                    <p class="text-muted">Directeur Commercial</p>
-                    <p class="card-text">Avec son expérience dans le retail tech, Akram développe notre réseau de distribution et notre stratégie commerciale.</p>
+            
+            <div class="col-md-2-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='images/akram.jpg') }}" class="card-img-top" alt="CMO">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Akram Zaraba</h5>
+                        <p class="text-muted small">Directeur Commercial</p>
+                        <p class="card-text small">Expert en stratégie commerciale et distribution.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='images/oussama.jpg') }}" class="card-img-top" alt="CMO">
-                <div class="card-body text-center">
-                    <h4 class="card-title">Oussama ELBACHARI</h4>
-                    <p class="text-muted">Gestionnaire</p>
-                    <p class="card-text">Avec son expérience dans le retail tech, Lucas développe notre réseau de distribution et notre stratégie commerciale.</p>
+            <div class="col-md-2-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='images/oussama.jpg') }}" class="card-img-top" alt="Manager">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Oussama Elbachari</h5>
+                        <p class="text-muted small">Gestionnaire</p>
+                        <p class="card-text small">Expert en gestion de projet et opérations.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='images/bao.jpg') }}" class="card-img-top" alt="CMO">
-                <div class="card-body text-center">
-                    <h4 class="card-title">Bao NGUYEN</h4>
-                    <p class="text-muted">Département développement</p>
-                    <p class="card-text">Avec son expérience dans le retail tech, Lucas développe notre réseau de distribution et notre stratégie commerciale.</p>
+            <div class="col-md-2-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='images/bao.jpg') }}" class="card-img-top" alt="Developer">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Bao Nguyen</h5>
+                        <p class="text-muted small">Développement</p>
+                        <p class="card-text small">Ingénieur logiciel spécialisé en systèmes embarqués.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,5 +232,45 @@
     font-size: 32px;
     margin: 0 auto;
 }
+
+/* Classe personnalisée pour avoir 5 colonnes de taille égale sur une ligne */
+.col-md-2-4 {
+    width: 20%;
+    padding-right: 15px;
+    padding-left: 15px;
+    position: relative;
+}
+
+/* Responsive pour les petits écrans */
+@media (max-width: 767.98px) {
+    .col-md-2-4 {
+        width: 100%;
+    }
+}
+
+/* Styles spécifiques pour les cartes de l'équipe */
+.card-img-top {
+    height: 160px;
+    object-fit: cover;
+}
+
+.card .card-body {
+    padding: 1rem;
+}
+
+.card .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.card .text-muted.small {
+    font-size: 0.8rem;
+}
+
+.card .card-text.small {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+}
 </style>
 {% endblock %}
+```
