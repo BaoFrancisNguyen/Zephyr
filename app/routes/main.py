@@ -65,8 +65,3 @@ def support():
 def tutorials():
     """Page de tutoriels et guides."""
     return render_template('tutorials.html')
-
-@main_bp.route('/faq')
-def faq():
-    """Page FAQ."""
-    return render_template('faq.html')
