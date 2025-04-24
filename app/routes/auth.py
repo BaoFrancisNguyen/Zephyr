@@ -160,9 +160,19 @@ def two_factor():
 @login_required
 def logout():
     """Déconnexion."""
+    # Déconnexion de l'utilisateur via Flask-Login
     logout_user()
+    
+    # Vider complètement la session
+    session.clear()
+    
+    # Supprimer également le cookie de session
+    response = redirect(url_for('main.index'))
+    response.delete_cookie('remember_token')  # Supprimer le cookie "Se souvenir de moi"
+    response.delete_cookie('session')  # Supprimer le cookie de session
+    
     flash('Vous avez été déconnecté.', 'info')
-    return redirect(url_for('main.index'))
+    return response
 
 @auth_bp.route('/profile')
 @login_required
