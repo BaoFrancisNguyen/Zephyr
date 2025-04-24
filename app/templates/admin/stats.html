@@ -1,135 +1,312 @@
-{% extends "base.html" %}
+{% extends "admin/master.html" %}
 
-{% block title %}JO E-Tickets - Statistiques{% endblock %}
+{% block title %}Statistiques{% endblock %}
+
+{% block head_css %}
+{{ super() }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .stats-card {
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+    .stats-header {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        border-radius: 8px 8px 0 0;
+    }
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: 2rem;
+    }
+    .metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    .metric-label {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+    .trend-positive {
+        color: #28a745;
+    }
+    .trend-negative {
+        color: #dc3545;
+    }
+    .print-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-chart-line me-2"></i>Statistiques</h1>
-    <div class="btn-group">
-        <button type="button" class="btn btn-outline-primary" id="export-pdf">
-            <i class="fas fa-file-pdf me-2"></i>Exporter en PDF
-        </button>
-        <button type="button" class="btn btn-outline-primary" id="export-csv">
-            <i class="fas fa-file-csv me-2"></i>Exporter en CSV
-        </button>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Statistiques et analyse des ventes</h1>
+        <div>
+            <button class="btn btn-outline-secondary me-2" id="refresh-data">
+                <i class="fas fa-sync-alt"></i> Actualiser
+            </button>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-file-export"></i> Exporter
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" id="export-pdf"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+                    <li><a class="dropdown-item" href="#" id="export-excel"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+                    <li><a class="dropdown-item" href="#" id="export-csv"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
-</div>
 
-<div class="row mb-4">
-    <!-- Période de temps -->
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text">Du</span>
-                            <input type="date" id="date-from" class="form-control">
-                        </div>
+    <!-- KPIs -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="card-body text-center">
+                    <div class="metric-label">Chiffre d'affaires total</div>
+                    <div class="metric-value">{{ "{:,.2f}".format(total_revenue) }} €</div>
+                    <div class="trend-positive">
+                        <i class="fas fa-arrow-up"></i> +18.7% vs mois précédent
                     </div>
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text">Au</span>
-                            <input type="date" id="date-to" class="form-control">
-                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="card-body text-center">
+                    <div class="metric-label">Commandes</div>
+                    <div class="metric-value">{{ total_orders }}</div>
+                    <div class="trend-positive">
+                        <i class="fas fa-arrow-up"></i> +12.3% vs mois précédent
                     </div>
-                    <div class="col-md-4">
-                        <div class="d-grid">
-                            <button type="button" id="apply-date-filter" class="btn btn-primary">
-                                <i class="fas fa-filter me-2"></i>Appliquer
-                            </button>
-                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="card-body text-center">
+                    <div class="metric-label">Paniers moyen</div>
+                    <div class="metric-value">
+                        {% if total_orders > 0 %}
+                            {{ "{:,.2f}".format(total_revenue / total_orders) }} €
+                        {% else %}
+                            0.00 €
+                        {% endif %}
+                    </div>
+                    <div class="trend-positive">
+                        <i class="fas fa-arrow-up"></i> +5.2% vs mois précédent
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="card-body text-center">
+                    <div class="metric-label">Taux de conversion</div>
+                    <div class="metric-value">3.8%</div>
+                    <div class="trend-negative">
+                        <i class="fas fa-arrow-down"></i> -0.5% vs mois précédent
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <!-- Statistiques des offres -->
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Répartition des billets par type d'offre</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="offers-chart" width="400" height="300"></canvas>
+    <!-- Graphiques -->
+    <div class="row">
+        <!-- Graphique évolution des ventes -->
+        <div class="col-md-8">
+            <div class="stats-card">
+                <div class="stats-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Évolution des ventes</h5>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-secondary active" data-period="month">Mois</button>
+                        <button type="button" class="btn btn-outline-secondary" data-period="quarter">Trimestre</button>
+                        <button type="button" class="btn btn-outline-secondary" data-period="year">Année</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Statistiques des ventes -->
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Évolution des ventes</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="sales-chart" width="400" height="300"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Statistiques de conversion -->
-    <div class="col-md-12 mb-4">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Taux de conversion</h5>
-            </div>
-            <div class="card-body">
-                <div class="row text-center">
-                    <div class="col-md-4">
-                        <div class="stats-card">
-                            <h3>Visiteurs uniques</h3>
-                            <p class="number">1,256</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="stats-card">
-                            <h3>Taux de conversion panier</h3>
-                            <p class="number">12.5%</p>
-                            <p class="text-muted">157 paniers créés</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="stats-card">
-                            <h3>Taux de conversion achat</h3>
-                            <p class="number">8.2%</p>
-                            <p class="text-muted">103 achats finalisés</p>
-                        </div>
+        
+        <!-- Graphique répartition des ventes -->
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-header">
+                    <h5 class="mb-0">Répartition des ventes par modèle</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="salesDistributionChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <!-- Tableau détaillé des ventes -->
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Détail des ventes</h5>
+    <div class="row mt-4">
+        <!-- Graphique statut des commandes -->
+        <div class="col-md-6">
+            <div class="stats-card">
+                <div class="stats-header">
+                    <h5 class="mb-0">Statut des commandes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Date</th>
-                                <th>Nombre de commandes</th>
-                                <th>Nombre de billets</th>
-                                <th>Chiffre d'affaires</th>
-                                <th>Panier moyen</th>
-                            </tr>
-                        </thead>
-                        <tbody id="sales-table-body">
-                            <!-- Les données seront chargées dynamiquement -->
-                        </tbody>
-                    </table>
+        </div>
+        
+        <!-- Graphique nouveaux utilisateurs -->
+        <div class="col-md-6">
+            <div class="stats-card">
+                <div class="stats-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Nouveaux utilisateurs</h5>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-secondary active" data-chart="bar">Barres</button>
+                        <button type="button" class="btn btn-outline-secondary" data-chart="line">Ligne</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="newUsersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau des statistiques mensuelles -->
+    <div class="stats-card mt-4">
+        <div class="stats-header">
+            <h5 class="mb-0">Statistiques mensuelles détaillées</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Mois</th>
+                            <th class="text-center">Commandes</th>
+                            <th class="text-center">Chiffre d'affaires</th>
+                            <th class="text-center">Panier moyen</th>
+                            <th class="text-center">Evolution CA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in monthly_stats %}
+                        <tr>
+                            <td>{{ stat.month }}</td>
+                            <td class="text-center">{{ stat.orders }}</td>
+                            <td class="text-center">{{ "{:,.2f}".format(stat.revenue) }} €</td>
+                            <td class="text-center">
+                                {% if stat.orders > 0 %}
+                                    {{ "{:,.2f}".format(stat.revenue / stat.orders) }} €
+                                {% else %}
+                                    0.00 €
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if loop.index < monthly_stats|length %}
+                                    {% set prev_revenue = monthly_stats[loop.index].revenue %}
+                                    {% if prev_revenue > 0 %}
+                                        {% set growth = ((stat.revenue - prev_revenue) / prev_revenue * 100)|round(1) %}
+                                        <span class="{% if growth >= 0 %}trend-positive{% else %}trend-negative{% endif %}">
+                                            {% if growth >= 0 %}+{% endif %}{{ growth }}%
+                                        </span>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top produits -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="stats-card">
+                <div class="stats-header">
+                    <h5 class="mb-0">Produits les plus vendus</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Produit</th>
+                                    <th class="text-center">Qté vendue</th>
+                                    <th class="text-end">CA généré</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Zephir Elite 4K</td>
+                                    <td class="text-center">87</td>
+                                    <td class="text-end">12 173,13 €</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Zephir Pro 720</td>
+                                    <td class="text-center">65</td>
+                                    <td class="text-end">7 799,35 €</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Zephir X100</td>
+                                    <td class="text-center">42</td>
+                                    <td class="text-end">3 779,58 €</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Batterie supplémentaire</td>
+                                    <td class="text-center">118</td>
+                                    <td class="text-end">3 538,82 €</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Hélices de rechange</td>
+                                    <td class="text-center">95</td>
+                                    <td class="text-end">1 424,05 €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="stats-card">
+                <div class="stats-header">
+                    <h5 class="mb-0">Statistiques par niveau de drone</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="droneLevelChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,164 +314,289 @@
 </div>
 {% endblock %}
 
-{% block scripts %}
+{% block tail_js %}
+{{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Données des graphiques (fournies par Flask)
-        const offersData = {{ offers_data|safe }};
-        const dateData = {{ date_data|safe }};
+        // Configuration des couleurs
+        const primaryColor = '#0056b3';
+        const secondaryColor = '#6c757d';
+        const successColor = '#28a745';
+        const dangerColor = '#dc3545';
+        const warningColor = '#ffc107';
+        const infoColor = '#17a2b8';
         
-        // Graphique des offres
-        const offersCtx = document.getElementById('offers-chart').getContext('2d');
-        const offersChart = new Chart(offersCtx, {
-            type: 'pie',
+        // Graphique d'évolution des ventes
+        const salesChartCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesChartCtx, {
+            type: 'line',
             data: {
-                labels: offersData.labels,
+                labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin'],
                 datasets: [{
-                    data: offersData.data,
-                    backgroundColor: [
-                        '#0d6efd',
-                        '#20c997',
-                        '#fd7e14'
-                    ],
-                    borderWidth: 1
+                    label: 'Chiffre d\'affaires (€)',
+                    data: [12500, 15800, 18500, 17200, 22000, 26500],
+                    borderColor: primaryColor,
+                    backgroundColor: 'rgba(0, 86, 179, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Nombre de commandes',
+                    data: [85, 105, 130, 115, 150, 180],
+                    borderColor: secondaryColor,
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    yAxisID: 'y1'
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         position: 'top',
                     },
-                    title: {
-                        display: true,
-                        text: 'Répartition des billets par type d\'offre'
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
                     }
-                }
-            }
-        });
-        
-        // Graphique des ventes
-        const salesCtx = document.getElementById('sales-chart').getContext('2d');
-        const salesChart = new Chart(salesCtx, {
-            type: 'line',
-            data: {
-                labels: dateData.labels,
-                datasets: [
-                    {
-                        label: 'Nombre de commandes',
-                        data: dateData.orders,
-                        borderColor: '#0d6efd',
-                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Ventes (€)',
-                        data: dateData.sales,
-                        borderColor: '#20c997',
-                        backgroundColor: 'rgba(32, 201, 151, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        yAxisID: 'y1'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                stacked: false,
+                },
                 scales: {
                     y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
+                        beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Nombre de commandes'
+                            text: 'Chiffre d\'affaires (€)'
                         }
                     },
                     y1: {
-                        type: 'linear',
-                        display: true,
+                        beginAtZero: true,
                         position: 'right',
                         grid: {
                             drawOnChartArea: false
                         },
                         title: {
                             display: true,
-                            text: 'Ventes (€)'
+                            text: 'Nombre de commandes'
                         }
-                    }
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Évolution des ventes'
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
                     }
                 }
             }
         });
         
-        // Remplir le tableau des ventes
-        const salesTableBody = document.getElementById('sales-table-body');
-        for (let i = 0; i < dateData.labels.length; i++) {
-            const row = document.createElement('tr');
-            
-            const date = document.createElement('td');
-            date.textContent = dateData.labels[i];
-            
-            const orders = document.createElement('td');
-            orders.textContent = dateData.orders[i];
-            
-            const tickets = document.createElement('td');
-            // Simuler le nombre de billets (environ 1.5 à 2 fois le nombre de commandes)
-            const ticketsCount = Math.round(dateData.orders[i] * (1.5 + Math.random() * 0.5));
-            tickets.textContent = ticketsCount;
-            
-            const revenue = document.createElement('td');
-            revenue.textContent = dateData.sales[i] + ' €';
-            
-            const average = document.createElement('td');
-            // Calculer le panier moyen
-            const averageValue = dateData.orders[i] > 0 ? (dateData.sales[i] / dateData.orders[i]).toFixed(2) : '0.00';
-            average.textContent = averageValue + ' €';
-            
-            row.appendChild(date);
-            row.appendChild(orders);
-            row.appendChild(tickets);
-            row.appendChild(revenue);
-            row.appendChild(average);
-            
-            salesTableBody.appendChild(row);
-        }
-        
-        // Filtrage par date
-        const dateFrom = document.getElementById('date-from');
-        const dateTo = document.getElementById('date-to');
-        const applyDateFilter = document.getElementById('apply-date-filter');
-        
-        // Initialiser les dates avec les 30 derniers jours
-        const today = new Date();
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(today.getDate() - 30);
-        
-        dateFrom.valueAsDate = thirtyDaysAgo;
-        dateTo.valueAsDate = today;
-        
-        // Appliquer le filtre de date (simulé)
-        applyDateFilter.addEventListener('click', function() {
-            alert('Fonctionnalité de filtrage par date à implémenter');
+        // Graphique de répartition des ventes
+        const salesDistributionChartCtx = document.getElementById('salesDistributionChart').getContext('2d');
+        const salesDistributionChart = new Chart(salesDistributionChartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Zephir Elite 4K', 'Zephir Pro 720', 'Zephir X100', 'Accessoires'],
+                datasets: [{
+                    data: [42, 28, 18, 12],
+                    backgroundColor: [
+                        primaryColor,
+                        infoColor,
+                        warningColor,
+                        secondaryColor
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
         });
         
-        // Export (simulé)
-        document.getElementById('export-pdf').addEventListener('click', function() {
-            alert('Fonctionnalité d\'export PDF à implémenter');
+        // Graphique statut des commandes
+        const orderStatusChartCtx = document.getElementById('orderStatusChart').getContext('2d');
+        const orderStatusLabels = [];
+        const orderStatusData = [];
+        const orderStatusColors = [];
+        
+        {% for stat in order_status_stats %}
+            orderStatusLabels.push('{{ stat.statut|capitalize }}');
+            orderStatusData.push({{ stat.count }});
+            {% if stat.statut == 'payée' %}
+                orderStatusColors.push(successColor);
+            {% elif stat.statut == 'en attente' %}
+                orderStatusColors.push(warningColor);
+            {% elif stat.statut == 'expédiée' %}
+                orderStatusColors.push(infoColor);
+            {% elif stat.statut == 'livrée' %}
+                orderStatusColors.push(primaryColor);
+            {% else %}
+                orderStatusColors.push(dangerColor);
+            {% endif %}
+        {% endfor %}
+        
+        const orderStatusChart = new Chart(orderStatusChartCtx, {
+            type: 'pie',
+            data: {
+                labels: orderStatusLabels,
+                datasets: [{
+                    data: orderStatusData,
+                    backgroundColor: orderStatusColors
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
         });
         
-        document.getElementById('export-csv').addEventListener('click', function() {
-            alert('Fonctionnalité d\'export CSV à implémenter');
+        // Graphique nouveaux utilisateurs
+        const newUsersChartCtx = document.getElementById('newUsersChart').getContext('2d');
+        const newUsersChart = new Chart(newUsersChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin'],
+                datasets: [{
+                    label: 'Nouveaux utilisateurs',
+                    data: [65, 78, 90, 85, 110, 125],
+                    backgroundColor: infoColor
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Graphique par niveau de drone
+        const droneLevelChartCtx = document.getElementById('droneLevelChart').getContext('2d');
+        const droneLevelLabels = [];
+        const droneLevelData = [];
+        
+        {% for stat in drone_stats %}
+            droneLevelLabels.push('{{ stat.niveau|capitalize }}');
+            droneLevelData.push({{ stat.total_sold }});
+        {% endfor %}
+        
+        const droneLevelChart = new Chart(droneLevelChartCtx, {
+            type: 'bar',
+            data: {
+                labels: droneLevelLabels,
+                datasets: [{
+                    label: 'Ventes par niveau',
+                    data: droneLevelData,
+                    backgroundColor: [
+                        '#0056b3',
+                        '#17a2b8',
+                        '#ffc107'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nombre de ventes'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Gestion des boutons de période
+        const periodButtons = document.querySelectorAll('[data-period]');
+        periodButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                periodButtons.forEach(b => b.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Ici, vous pourriez avoir un code qui change les données du graphique
+                // en fonction de la période sélectionnée (par exemple, faire une requête AJAX)
+            });
+        });
+        
+        // Gestion des boutons de type de graphique
+        const chartTypeButtons = document.querySelectorAll('[data-chart]');
+        chartTypeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                chartTypeButtons.forEach(b => b.classList.remove('active'));
+                button.classList.add('active');
+                
+                const chartType = button.getAttribute('data-chart');
+                newUsersChart.config.type = chartType;
+                newUsersChart.update();
+            });
+        });
+        
+        // Fonction pour l'export des données
+        document.getElementById('export-pdf').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Export PDF déclenché');
+            // Ici, vous pourriez implémenter l'export PDF
+        });
+        
+        document.getElementById('export-excel').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Export Excel déclenché');
+            // Ici, vous pourriez implémenter l'export Excel
+        });
+        
+        document.getElementById('export-csv').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Export CSV déclenché');
+            // Ici, vous pourriez implémenter l'export CSV
+        });
+        
+        // Animation pour le rafraîchissement des données
+        document.getElementById('refresh-data').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            icon.classList.add('fa-spin');
+            
+            // Simuler un chargement
+            setTimeout(() => {
+                icon.classList.remove('fa-spin');
+                alert('Données actualisées avec succès !');
+                // Ici, vous pourriez faire une requête AJAX pour rafraîchir les données
+            }, 1000);
         });
     });
 </script>

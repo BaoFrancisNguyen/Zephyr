@@ -1,0 +1,102 @@
+{% extends "admin/master.html" %}
+
+{% block head %}
+{{ super() }}
+<!-- Chart.js directement depuis CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+<style>
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <h1 class="mb-4">Statistiques de Zephir Drones</h1>
+    
+    <!-- Graphique en secteurs - par niveau -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Ventes par niveau de drone</h5>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="levelChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Graphique en barres - par mois -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Ventes mensuelles</h5>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Données statiques pour test (à remplacer par les vraies données)
+const levelData = {
+    labels: ['Débutant', 'Intermédiaire', 'Expert'],
+    data: [65, 25, 10]
+};
+
+const monthlyData = {
+    labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin'],
+    data: [12, 19, 8, 15, 22, 30]
+};
+
+// Fonction d'initialisation des graphiques
+document.addEventListener('DOMContentLoaded', function() {
+    // Graphique par niveau
+    new Chart(document.getElementById('levelChart'), {
+        type: 'pie',
+        data: {
+            labels: levelData.labels,
+            datasets: [{
+                data: levelData.data,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.7)',  // Cyan
+                    'rgba(54, 162, 235, 0.7)',  // Bleu
+                    'rgba(153, 102, 255, 0.7)'  // Violet
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+    
+    // Graphique mensuel
+    new Chart(document.getElementById('monthlyChart'), {
+        type: 'bar',
+        data: {
+            labels: monthlyData.labels,
+            datasets: [{
+                label: 'Ventes',
+                data: monthlyData.data,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

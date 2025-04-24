@@ -90,7 +90,7 @@ class ChatbotService:
             "messages": full_messages,
             "stream": False,
             "options": {
-                "temperature": 0.7,
+                "temperature": 0.5,
                 "top_p": 0.9,
                 "max_tokens": 500
             }
@@ -145,7 +145,7 @@ class ChatbotService:
             "prompt": full_prompt,
             "stream": False,
             "options": {
-                "temperature": 0.7,
+                "temperature": 0.5,
                 "top_p": 0.9,
                 "max_tokens": 500
             }

@@ -7,7 +7,8 @@ from flask_mail import Mail
 from flask_admin import Admin
 from flask_session import Session
 from app.config import Config
-from app.admin_views import AdminHomeView  # Importer depuis app.admin_views
+from app.admin_views import AdminHomeView
+import os
 
 # Initialisation des extensions
 db = SQLAlchemy()
@@ -18,12 +19,23 @@ login_manager.login_message = 'Veuillez vous connecter pour accéder à cette pa
 login_manager.login_message_category = 'info'
 bcrypt = Bcrypt()
 mail = Mail()
-admin = Admin(name='JO E-Tickets Admin', template_mode='bootstrap4', index_view=AdminHomeView())
+
+# Définir explicitement le chemin du template de base
+admin_base_template = 'admin/master.html'
+
+admin = Admin(
+    name='Zephir Drones - Administration', 
+    template_mode='bootstrap4', 
+    index_view=AdminHomeView()
+)
 session = Session()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    # Définir explicitement le template de base pour l'admin
+    app.jinja_env.globals['admin_base_template'] = admin_base_template
 
     # Initialisation des extensions avec l'application
     db.init_app(app)

@@ -1,163 +1,301 @@
-{% extends "base.html" %}
+{% extends "admin/master.html" %}
 
-{% block title %}JO E-Tickets - Administration{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
+
+{% block head_css %}
+{{ super() }}
+<style>
+    .stats-card {
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    .stats-icon {
+        font-size: 2.5rem;
+        opacity: 0.8;
+    }
+    .stats-number {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    .stats-label {
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+    .chart-container {
+        min-height: 300px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+    }
+    .recent-orders-table th, .recent-orders-table td {
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-tachometer-alt me-2"></i>Tableau de bord administrateur</h1>
-    <div>
-        <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary">
-            <i class="fas fa-home me-2"></i>Retour au site
-        </a>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Tableau de Bord</h1>
+        <div>
+            <button class="btn btn-outline-secondary me-2" id="refresh-data">
+                <i class="fas fa-sync-alt"></i> Actualiser
+            </button>
+            <button class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-download"></i> Exporter
+            </button>
+        </div>
     </div>
-</div>
 
-<!-- Statistiques générales -->
-<div class="row mb-4">
-    <div class="col-md-3">
-        <div class="card stats-card h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-users fa-3x text-primary"></i>
+    <!-- Statistiques globales -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-4">
+            <div class="stats-card card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="stats-label mb-0">Utilisateurs</p>
+                            <h2 class="stats-number mb-0">{{ total_users }}</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <p class="small mb-0 mt-3">
+                        <i class="fas fa-arrow-up"></i> <span id="users-growth">15%</span> depuis le mois dernier
+                    </p>
                 </div>
-                <h4 class="card-title">Utilisateurs</h4>
-                <p class="number mb-0">{{ total_users }}</p>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="stats-card card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="stats-label mb-0">Drones</p>
+                            <h2 class="stats-number mb-0">{{ total_offers }}</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-drone-alt"></i>
+                        </div>
+                    </div>
+                    <p class="small mb-0 mt-3">
+                        <i class="fas fa-arrow-up"></i> <span id="drones-growth">8%</span> depuis le mois dernier
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="stats-card card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="stats-label mb-0">Commandes</p>
+                            <h2 class="stats-number mb-0">{{ total_orders }}</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                    <p class="small mb-0 mt-3">
+                        <i class="fas fa-arrow-up"></i> <span id="orders-growth">23%</span> depuis le mois dernier
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="stats-card card bg-warning text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="stats-label mb-0">Chiffre d'affaires</p>
+                            <h2 class="stats-number mb-0"><span id="total-revenue">{{ total_orders * 119 }}</span> €</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-euro-sign"></i>
+                        </div>
+                    </div>
+                    <p class="small mb-0 mt-3">
+                        <i class="fas fa-arrow-up"></i> <span id="revenue-growth">18%</span> depuis le mois dernier
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card stats-card h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-ticket-alt fa-3x text-success"></i>
-                </div>
-                <h4 class="card-title">Offres</h4>
-                <p class="number mb-0">{{ total_offers }}</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card stats-card h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-shopping-cart fa-3x text-warning"></i>
-                </div>
-                <h4 class="card-title">Commandes</h4>
-                <p class="number mb-0">{{ total_orders }}</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card stats-card h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-qrcode fa-3x text-danger"></i>
-                </div>
-                <h4 class="card-title">Billets</h4>
-                <p class="number mb-0">{{ total_tickets }}</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row">
-    <!-- Graphique des offres -->
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Distribution des billets par type</h5>
+    <!-- Graphiques -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="chart-container card">
+                <div class="card-header bg-transparent border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Évolution des ventes</h5>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-secondary active" data-period="week">Semaine</button>
+                            <button type="button" class="btn btn-outline-secondary" data-period="month">Mois</button>
+                            <button type="button" class="btn btn-outline-secondary" data-period="year">Année</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="salesChart" height="300"></canvas>
+                </div>
             </div>
-            <div class="card-body">
-                <canvas id="offers-chart" width="400" height="300" 
-                    data-offers='{"labels": ["Solo", "Duo", "Familiale"], "data": [{{ offers_stats.solo }}, {{ offers_stats.duo }}, {{ offers_stats.familiale }}]}'>
-                </canvas>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="chart-container card">
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="mb-0">Répartition des ventes par modèle</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="dronesPieChart" height="300"></canvas>
+                </div>
             </div>
         </div>
     </div>
-    
-    <!-- Dernières commandes -->
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Dernières commandes</h5>
-            </div>
-            <div class="card-body">
-                {% if recent_orders %}
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Référence</th>
-                                <th>Client</th>
-                                <th>Date</th>
-                                <th>Montant</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for order in recent_orders %}
-                            <tr>
-                                <td>{{ order.reference }}</td>
-                                <td>{{ order.user.prenom }} {{ order.user.nom }}</td>
-                                <td>{{ order.date_commande.strftime('%d/%m/%Y') }}</td>
-                                <td>{{ order.total }} €</td>
-                                <td>
-                                    <a href="{{ url_for('admin_custom.orders') }}" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>Aucune commande récente.
-                </div>
-                {% endif %}
-            </div>
-            <div class="card-footer text-end">
-                <a href="{{ url_for('admin_custom.orders') }}" class="btn btn-outline-primary btn-sm">
-                    Voir toutes les commandes
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row">
-    <!-- Liens rapides -->
-    <div class="col-md-12 mb-4">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Gestion</h5>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="chart-container card">
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="mb-0">Nouveaux utilisateurs</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="usersChart" height="250"></canvas>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3 mb-md-0">
-                        <a href="{{ url_for('admin_custom.offers') }}" class="btn btn-outline-primary d-block p-3">
-                            <i class="fas fa-ticket-alt fa-2x mb-2"></i><br>
-                            Gérer les offres
-                        </a>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="chart-container card">
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="mb-0">Statut des commandes</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="ordersStatusChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Commandes récentes et tendances -->
+    <div class="row">
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Commandes récentes</h5>
+                        <a href="{{ url_for('admin_custom.orders') }}" class="btn btn-sm btn-outline-primary">Voir tout</a>
                     </div>
-                    <div class="col-md-3 mb-3 mb-md-0">
-                        <a href="{{ url_for('admin_custom.users') }}" class="btn btn-outline-primary d-block p-3">
-                            <i class="fas fa-users fa-2x mb-2"></i><br>
-                            Gérer les utilisateurs
-                        </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover recent-orders-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td>{{ order.reference }}</td>
+                                    <td>{{ order.user.prenom }} {{ order.user.nom }}</td>
+                                    <td>{{ order.date_commande.strftime('%d/%m/%Y') }}</td>
+                                    <td>{{ order.total }} €</td>
+                                    <td>
+                                        <span class="badge rounded-pill {% if order.statut == 'payée' %}bg-success{% elif order.statut == 'en attente' %}bg-warning{% elif order.statut == 'expédiée' %}bg-info{% elif order.statut == 'livrée' %}bg-primary{% else %}bg-danger{% endif %}">
+                                            {{ order.statut|capitalize }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('admin_custom.orders') }}" class="btn btn-outline-secondary"><i class="fas fa-eye"></i></a>
+                                            <button type="button" class="btn btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-md-3 mb-3 mb-md-0">
-                        <a href="{{ url_for('admin_custom.orders') }}" class="btn btn-outline-primary d-block p-3">
-                            <i class="fas fa-shopping-cart fa-2x mb-2"></i><br>
-                            Gérer les commandes
-                        </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Tendances et popularité</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="mb-3">Drones les plus vendus</h6>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Zephir Elite 4K</span>
+                            <span>68%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 68%;" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <a href="{{ url_for('admin_custom.stats') }}" class="btn btn-outline-primary d-block p-3">
-                            <i class="fas fa-chart-line fa-2x mb-2"></i><br>
-                            Statistiques
-                        </a>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Zephir Pro 720</span>
+                            <span>48%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 48%;" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Zephir X100</span>
+                            <span>35%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 35%;" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6 class="mb-3">Accessoires populaires</h6>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Batteries supplémentaires</span>
+                            <span>72%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 72%;" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Hélices de rechange</span>
+                            <span>54%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 54%;" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -166,41 +304,224 @@
 </div>
 {% endblock %}
 
-{% block scripts %}
+{% block tail_js %}
+{{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Graphique des offres
-        var offersChartCanvas = document.getElementById('offers-chart');
-        if (offersChartCanvas) {
-            var offersData = JSON.parse(offersChartCanvas.getAttribute('data-offers'));
-            
-            new Chart(offersChartCanvas, {
-                type: 'pie',
-                data: {
-                    labels: offersData.labels,
-                    datasets: [{
-                        data: offersData.data,
-                        backgroundColor: [
-                            '#0d6efd',
-                            '#20c997',
-                            '#fd7e14'
-                        ],
-                        borderWidth: 1
-                    }]
+        // Données pour le graphique d'évolution des ventes
+        const salesChartData = {
+            week: {
+                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                datasets: [{
+                    label: 'Chiffre d\'affaires (€)',
+                    data: [1250, 1580, 1320, 1940, 2280, 1890, 2390],
+                    borderColor: '#0056b3',
+                    backgroundColor: 'rgba(0, 86, 179, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Commandes',
+                    data: [8, 12, 9, 14, 18, 15, 19],
+                    borderColor: '#28a745',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    tension: 0.4
+                }]
+            },
+            month: {
+                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
+                datasets: [{
+                    label: 'Chiffre d\'affaires (€)',
+                    data: [7200, 8500, 9300, 10500],
+                    borderColor: '#0056b3',
+                    backgroundColor: 'rgba(0, 86, 179, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Commandes',
+                    data: [52, 65, 72, 89],
+                    borderColor: '#28a745',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    tension: 0.4
+                }]
+            },
+            year: {
+                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                datasets: [{
+                    label: 'Chiffre d\'affaires (€)',
+                    data: [22000, 26000, 30000, 28000, 32000, 35000, 38000, 41000, 45000, 48000, 52000, 58000],
+                    borderColor: '#0056b3',
+                    backgroundColor: 'rgba(0, 86, 179, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Commandes',
+                    data: [180, 210, 240, 230, 260, 280, 310, 320, 350, 370, 410, 450],
+                    borderColor: '#28a745',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    tension: 0.4
+                }]
+            }
+        };
+
+        // Graphique d'évolution des ventes
+        const salesChartCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesChartCtx, {
+            type: 'line',
+            data: salesChartData.week,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Répartition des billets par type d\'offre'
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
                         }
                     }
                 }
+            }
+        });
+
+        // Gérer les boutons de période pour le graphique de ventes
+        const periodButtons = document.querySelectorAll('[data-period]');
+        periodButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Retirer la classe active de tous les boutons
+                periodButtons.forEach(b => b.classList.remove('active'));
+                // Ajouter la classe active au bouton cliqué
+                button.classList.add('active');
+                // Mettre à jour les données du graphique
+                const period = button.getAttribute('data-period');
+                salesChart.data = salesChartData[period];
+                salesChart.update();
+            });
+        });
+
+        // Graphique en camembert pour les drones
+        const dronesPieChartCtx = document.getElementById('dronesPieChart').getContext('2d');
+        new Chart(dronesPieChartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Zephir Elite 4K', 'Zephir Pro 720', 'Zephir X100', 'Accessoires'],
+                datasets: [{
+                    data: [42, 28, 18, 12],
+                    backgroundColor: [
+                        '#0056b3',
+                        '#28a745',
+                        '#ffc107',
+                        '#6c757d'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    }
+                }
+            }
+        });
+
+        // Graphique des nouveaux utilisateurs
+        const usersChartCtx = document.getElementById('usersChart').getContext('2d');
+        new Chart(usersChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                datasets: [{
+                    label: 'Nouveaux utilisateurs',
+                    data: [65, 78, 90, 85, 110, 125],
+                    backgroundColor: '#17a2b8'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graphique des statuts de commande
+        const ordersStatusChartCtx = document.getElementById('ordersStatusChart').getContext('2d');
+        new Chart(ordersStatusChartCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Payée', 'En attente', 'Expédiée', 'Livrée', 'Annulée'],
+                datasets: [{
+                    data: [35, 15, 20, 25, 5],
+                    backgroundColor: [
+                        '#28a745',
+                        '#ffc107',
+                        '#17a2b8',
+                        '#0056b3',
+                        '#dc3545'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+
+        // Formater le nombre pour le chiffre d'affaires
+        const totalRevenue = document.getElementById('total-revenue');
+        if (totalRevenue) {
+            totalRevenue.textContent = new Intl.NumberFormat('fr-FR').format(parseInt(totalRevenue.textContent));
+        }
+
+        // Animation pour le rafraîchissement des données
+        const refreshButton = document.getElementById('refresh-data');
+        if (refreshButton) {
+            refreshButton.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                icon.classList.add('fa-spin');
+                setTimeout(() => {
+                    icon.classList.remove('fa-spin');
+                }, 1000);
             });
         }
     });

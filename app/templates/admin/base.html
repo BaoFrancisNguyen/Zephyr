@@ -1,0 +1,13 @@
+{% extends 'admin/base.html' %}
+
+{% block access_control %}
+<div class="navbar-nav mr-auto">
+    <a class="nav-link" href="{{ url_for('admin_custom.index') }}">
+        <i class="fa fa-tachometer-alt"></i> Dashboard Custom
+    </a>
+    <a class="nav-link" href="{{ url_for('admin_custom.stats') }}">
+        <i class="fa fa-chart-bar"></i> Statistiques
+    </a>
+</div>
+{{ super() }}
+{% endblock %}
